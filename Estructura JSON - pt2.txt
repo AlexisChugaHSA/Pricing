@@ -1,0 +1,209 @@
+
+******Obtener un producto******
+Request - GET api/id_producto
+
+Response:
+ {"id_producto": 10,
+ "id_categoria":1,
+ "nombre":"producto 1",
+ "descripcion":"producto askjdskd",
+ "precio":50.0,
+ "descuento":0.0,
+ "url":"https://ssddsf",
+ "imagen":"asdfdfaasdf",
+ "tags":"asdfsadfasdfasdf",
+	}
+
+******Obtener todos los productos******
+Request - GET
+
+Response:
+[ {"id_producto": 10, "nombre":"producto 1",...},
+  {"id_producto": 11, "nombre":"producto 2",...},
+  {"id_producto": 12, "nombre":"producto 3",...},
+  {"id_producto": 13, "nombre":"producto 4",...},
+  .
+  .
+  .
+]
+
+**************** Crear Empresa *****************
+Request - POST 
+	{"nombre": "HSA",
+        "telefono":"1234567892", 
+        "correo":"hsa@gmail.com", 
+        "identificacion":"1234562355"}
+Response:
+	{"id_empresa":2,
+	"nombre": "HSA",
+        "telefono":"1234567892", 
+        "correo":"hsa@gmail.com", 
+        "identificacion":"1234562355"}
+
+
+**************** Obtener una Empresa *****************
+Request - GET  api/id_empresa
+Response:
+	{"id_empresa":2,
+	"nombre": "HSA",
+        "telefono":"1234567892", 
+        "correo":"hsa@gmail.com", 
+        "identificacion":"1234562355"}
+
+
+**************** Obtener Membresias *****************
+Request - GET
+Response:
+      [ {"id_membresia": 1, "tipo":"mensual", "descuento":0.1, "periodo":1},
+  	{"id_membresia": 2, "tipo":"trimestral", "descuento":0.15, "periodo":3},
+  	{"id_membresia": 3, "tipo":"semestral", "descuento":0.30, "periodo":6},
+ 	{"id_membresia": 4, "tipo":"anual", "descuento":0.35, "periodo":12},
+  	.
+  	.
+  	.
+	]
+
+
+
+**************** Obtener una membresia *****************
+Request - GET  api/id_membresia
+Response: 
+	{"id_membresia": 1, 
+	"tipo":"mensual", 
+	"descuento":0.1, 
+	"periodo":1}
+
+
+**************** Guardar Metodo de Pago *****************
+Request POST:
+	{"Tarjeta":"12833251",
+	"nombre":"Alexis Chuga", }
+
+Response:
+	{"id_metodo_pago": 1 }
+
+
+**************** Guardar Pago *****************
+Request POST
+	{"id_empresa": 1, 
+	"id_metodo_pago": 1, 
+	"valor":50.0, 
+	"descuento":0.1, 
+	"periodo":3,
+	"fecha":"2024-11-07",
+	"procesado":1, 
+	"intentos":1, 
+	"detalle":"Celulares-Computadoras",
+	"Cancelado":1, 
+	"fecha_hasta":"2024-12-07" (esta fecha se calcula en el api, a partir de la fecha actual y el periodo)
+	}
+Response:
+	{"id_pago": 1 }
+
+
+**************** Obtener un  Pago por su id*****************
+Request - GET  api/id_pago
+Response: 
+	{"id_pago": 1,
+	"id_empresa": 1, 
+	"id_metodo_pago": 1, 
+	"valor":50.0, 
+	"descuento":0.1, 
+	"periodo":3,
+	"fecha":"2024-11-07",
+	"procesado":1, 
+	"intentos":1, 
+	"detalle":"Celulares-Computadoras",
+	"Cancelado":1, 
+	"fecha_hasta":"2024-12-07" 
+	}
+
+
+**************** Obtener Pagos por id de la empresa *****************
+Request - GET  api/id_empresa
+Response: 
+	[{"id_pago": 1,"id_empresa": 1, "id_metodo_pago": 1, "valor":50.0,...}, 
+ 	{"id_pago": 12,"id_empresa": 1, "id_metodo_pago": 1, "valor":50.0,...}, 
+	{"id_pago": 14,"id_empresa": 1, "id_metodo_pago": 1, "valor":50.0,...}, 
+	{"id_pago": 19,"id_empresa": 1, "id_metodo_pago": 1, "valor":50.0,...}, 
+	]
+
+
+**************** Obtener Iva *****************
+Request - Get api/id_iva:
+Response: 
+	{ "id_iva":1,
+	  "iva_valor"0.15}
+	
+
+**************** Guardar una factura *****************
+Request - POST:
+	{"id_empresa": 1,
+	"total": 100.0, 
+	"subtotal": 90.0, 
+	"fecha":"2024-11-07", 
+	"iva":0.15, 
+	"iva_0":0.15, 
+	"ruc_empresa":"1235662156521",
+	"nombre_empresa":"HSA",
+	"telefono_empresa":"1234567898", 
+	"correo_empresa":"hsa@gmail.com", 
+	"id_usuario":10,
+	"SRI":"", 
+	}
+Response: 
+	{"id_factura": 1 }
+
+**************** Guardar detalle de factura *****************
+Request - POST:
+	{"id_pago": 1,
+	"id_producto": 1, 
+	"id_factura":1, 
+	"precio":1.00, 
+
+	}
+Response: 
+	{"id_detalle_factura": 1 }
+
+
+
+**************** Guardar Producto-Usuario *****************
+Request - POST:
+	{"id_usuario": 1,
+	"id_producto": 1, 
+	"id_pago":1, 
+	"activo":1, 
+	"precio":50.0,
+	"fecha":"2024-11-07",
+	"periodo":3,
+	"fecha_hasta":"2024-12-07" (esta fecha se calcula en el api, a partir de la fecha actual y el periodo)
+	}
+
+Response:
+	{"id_producto_usuario":1}
+
+
+**************** Obtener facturas por id de usuario *****************
+Request - GET  api/id_usuario
+	[	{"id_factura": 1,"id_empresa": 1,"id_usuario": 1,"total": 100.0,...},
+		{"id_factura": 2,"id_empresa": 5,"id_usuario": 1,"total": 100.0,...},
+		{"id_factura": 3,"id_empresa": 6,"id_usuario": 1,"total": 100.0,...},
+		.
+		.
+		.
+	]
+
+**************** Obtener detalles de facturas por id de factura *****************
+Request - GET  api/id_factura
+	[	{"id_detalle_factura": 1,"id_pago": 1,"id_factura": 1,"precio": 100.0,...},
+		{"id_detalle_factura": 2,"id_pago": 5,"id_factura": 1,"precio": 100.0,...},
+		{"id_detalle_factura": 3,"id_pago": 6,"id_factura": 1,"precio": 100.0,...},
+		.
+		.
+		.
+	]
+
+
+
+
+

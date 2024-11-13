@@ -1,0 +1,94 @@
+*****Crear Cuenta de Usuario********
+Request - POST:
+{
+    "nombre": "Alexis10",
+    "apellido": "Chuga",
+    "correo": "alexischuga12345@gmail.com",
+    "password": "123456aA",
+}
+Response:
+{
+    "id_usuario": 10,
+    "nombre": "Alexis10",
+    "apellido": "Chuga",
+    "correo": "alexischuga12345@gmail.com",
+}
+
+
+*********Login**********
+Request - POST:
+{
+  "correo": "admin@admin.com",
+  "password": "admin",
+}
+Response:
+{
+  "id_usuario": 10,
+  "token":"dsfag5dfg5ad1f65asd4f"
+}
+
+
+******* Consultar información de usuario *******
+Request - GET - api/id_usuario
+Response:
+{
+    "nombre": "Alexis10",
+    "apellido": "Chuga",
+    "correo": "alexischuga12345@gmail.com",
+}
+
+
+******* Comprobar password de usuario ******
+Request - POST:
+{
+  "id_usuario": 10,
+  "password":"admin"
+}
+
+Response:
+{
+  "id_usuario": 10
+}
+
+
+****** Actualizar info de usuario******
+Request - PUT  api/id_usuario
+{
+    "nombre": "Alexis10",
+    "apellido": "Chuga",
+    "correo": "alexischuga12345@gmail.com",
+}
+Response:
+{
+  "id_usuario": 10
+}
+
+
+****** Cambiar Password ****
+Request - PUT  api/id_usuario
+{
+    "password": "admin2",
+}
+Response:
+{
+  "id_usuario": 10
+}
+
+
+***** Comprobar existencia de usuario ****
+Request - POST  
+{
+    "correo": "alexischuga12345@gmail.com"
+}
+Response:
+{
+     "id_usuario": 10
+}
+
+
+
+
+
+
+
+
