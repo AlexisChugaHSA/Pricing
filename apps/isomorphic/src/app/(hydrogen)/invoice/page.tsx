@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 const pageHeader = {
-  title: 'Invoice List',
+  title: 'Facturación',
   breadcrumb: [
     {
       href: routes.eCommerce.dashboard,

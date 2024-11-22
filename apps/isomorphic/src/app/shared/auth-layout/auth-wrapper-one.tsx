@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import logoImg from '@public/logo-primary.svg';
+import logoImg from '@public/icon.png';
 import logoImgText from '@public/logo-primary-text.svg';
 import Image from 'next/image';
 import { Button, Title, Text } from 'rizzui';
@@ -47,7 +47,7 @@ export default function AuthWrapperOne({
         className="sticky start-0 top-0 z-20 flex items-center justify-center bg-blue p-3.5 text-sm font-medium text-white md:p-4 lg:hidden"
       >
         <PiArrowLeftBold />
-        <Text className="ms-1 font-lexend">Back to home</Text>
+        <Text className="ms-1 font-lexend">Regresar</Text>
       </Link>
 
       <div className="min-h-screen justify-between gap-x-8 px-4 py-8 pt-10 md:pt-12 lg:flex lg:p-6 xl:gap-x-10 xl:p-7 2xl:p-10 2xl:pt-10 [&>div]:min-h-[calc(100vh-80px)]">
@@ -58,19 +58,15 @@ export default function AuthWrapperOne({
               className="absolute -top-4 start-0 hidden p-3 text-gray-500 hover:text-gray-700 lg:flex lg:items-center 2xl:-top-7 2xl:ps-20 "
             >
               <PiArrowLeftBold />
-              <b className="ms-1 font-medium">Back to home</b>
+              <b className="ms-1 font-medium">Regresar</b>
             </Link>
             <div className="mb-7 px-6 pt-3 text-center md:pt-0 lg:px-0 lg:text-start xl:mb-8 2xl:mb-10">
               <Link
                 href={'/'}
                 className="mb-6 inline-flex max-w-[168px] xl:mb-8"
               >
-                <Image src={logoImg} alt="Isomorphic" />
-                <Image
-                  src={logoImgText}
-                  alt="Isomorphic"
-                  className="ps-2.5 dark:invert"
-                />
+                <Image src={logoImg} alt="Isomorphic" width={100}/>
+                <Title as="h1" className='flex items-center mb-5 text-[36px] leading-snug md:text-3xl md:!leading-normal lg:mb-2 lg:pe-16 lg:text-[35px] xl:text-5xl 2xl:pe-8 2xl:text-5xl'>HSA</Title>
               </Link>
               <Title
                 as="h2"
@@ -84,7 +80,8 @@ export default function AuthWrapperOne({
             </div>
             {isSocialLoginActive && (
               <>
-                <div className="grid grid-cols-1 gap-4 pb-5 md:grid-cols-2 md:pb-6 xl:gap-5 xl:pb-7">
+                <div className="grid grid-cols-1 gap-4 pb-5 md:grid-cols-1 md:pb-6 xl:gap-5 xl:pb-7">
+                  {/*
                   <Button
                     onClick={() =>
                       // it should be signIn('apple')
@@ -94,8 +91,8 @@ export default function AuthWrapperOne({
                     className="h-11 w-full"
                   >
                     <PiAppleLogoFill className="me-2 h-4 w-4 shrink-0" />
-                    <span className="truncate">Signin With Apple</span>
-                  </Button>
+                    <span className="truncate">Iniciar Sesión con Apple</span>
+                  </Button>*/}
                   <Button
                     variant="outline"
                     onClick={() =>
@@ -105,10 +102,10 @@ export default function AuthWrapperOne({
                     className="h-11 w-full"
                   >
                     <FcGoogle className="me-2 h-4 w-4 shrink-0" />
-                    <span className="truncate">Signin With Google</span>
+                    <span className="truncate">Iniciar Sesión con Google</span>
                   </Button>
                 </div>
-                <OrSeparation title="OR" className="mb-5 2xl:mb-7" isCenter />
+                <OrSeparation title="Ó" className="mb-5 2xl:mb-7" isCenter />
               </>
             )}
 

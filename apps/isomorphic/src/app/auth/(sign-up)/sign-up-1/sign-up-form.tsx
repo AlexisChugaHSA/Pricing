@@ -8,6 +8,7 @@ import { Password, Checkbox, Button, Input, Text } from 'rizzui';
 import { Form } from '@ui/form';
 import { routes } from '@/config/routes';
 import { SignUpSchema, signUpSchema } from '@/validators/signup.schema';
+import { User } from '@/data/user'
 
 const initialValues = {
   firstName: '',
@@ -18,11 +19,21 @@ const initialValues = {
   isAgreed: false,
 };
 
+const user: User = {
+  nombre: '',
+  apellido: '', // Este campo es opcional
+  correo: '',
+  password: ''
+};
+
 export default function SignUpForm() {
   const [reset, setReset] = useState({});
-
   const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
-    console.log(data);
+    user.nombre = data.firstName;
+    user.apellido = data.lastName;
+    user.correo = data.email;
+    user.password = data.password;
+    console.log(user);
     setReset({ ...initialValues, isAgreed: false });
   };
 
@@ -42,7 +53,7 @@ export default function SignUpForm() {
               type="text"
               size="lg"
               label="Primer Nombre"
-              placeholder="Enter your first name"
+              placeholder="Ingresa tu primer nombre"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register('firstName')}
@@ -51,8 +62,8 @@ export default function SignUpForm() {
             <Input
               type="text"
               size="lg"
-              label="Last Name"
-              placeholder="Enter your last name"
+              label="Apellido"
+              placeholder="Ingresa tu apellido"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register('lastName')}
@@ -61,16 +72,16 @@ export default function SignUpForm() {
             <Input
               type="email"
               size="lg"
-              label="Email"
+              label="Correo electrónico"
               className="col-span-2 [&>label>span]:font-medium"
               inputClassName="text-sm"
-              placeholder="Enter your email"
+              placeholder="Ingresa tu correo"
               {...register('email')}
               error={errors.email?.message}
             />
             <Password
-              label="Password"
-              placeholder="Enter your password"
+              label="Contraseña"
+              placeholder="Ingresa una contraseña"
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -78,8 +89,8 @@ export default function SignUpForm() {
               error={errors.password?.message}
             />
             <Password
-              label="Confirm Password"
-              placeholder="Enter confirm password"
+              label="Confirma tu contraseña"
+              placeholder="Repite tu contraseña"
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -92,38 +103,38 @@ export default function SignUpForm() {
                 className="[&>label>span]:font-medium [&>label]:items-start"
                 label={
                   <>
-                    By signing up you have agreed to our{' '}
+                    Al registrarte has aceptado nuestros{' '}
                     <Link
                       href="/"
                       className="font-medium text-blue transition-colors hover:underline"
                     >
-                      Terms
+                      Términos
                     </Link>{' '}
-                    &{' '}
+                    y {' '}
                     <Link
                       href="/"
                       className="font-medium text-blue transition-colors hover:underline"
                     >
-                      Privacy Policy
+                      Políticas de Privacidad
                     </Link>
                   </>
                 }
               />
             </div>
             <Button size="lg" type="submit" className="col-span-2 mt-2">
-              <span>Get Started</span>{' '}
+              <span>Empezar</span>{' '}
               <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
             </Button>
           </div>
         )}
       </Form>
       <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
-        Don’t have an account?{' '}
+      ¿Ya tienes una cuenta?{' '}
         <Link
           href={routes.auth.signIn1}
           className="font-semibold text-gray-700 transition-colors hover:text-blue"
         >
-          Sign In
+          Inicia sesión
         </Link>
       </Text>
     </>

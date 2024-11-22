@@ -9,11 +9,16 @@ import { Checkbox, Password, Button, Input, Text } from 'rizzui';
 import { Form } from '@ui/form';
 import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
+import { User } from '@/data/user';
 
 const initialValues: LoginSchema = {
   email: 'admin@admin.com',
   password: 'admin',
   rememberMe: true,
+};
+const user: User = {
+  correo: '',
+  password: ''
 };
 
 export default function SignInForm() {
@@ -21,7 +26,9 @@ export default function SignInForm() {
   const [reset, setReset] = useState({});
 
   const onSubmit: SubmitHandler<LoginSchema> = (data) => {
-    console.log(data);
+    user.correo=data.email
+    user.password=data.password
+    console.log(user);
     signIn('credentials', {
       ...data,
     });
@@ -61,7 +68,7 @@ export default function SignInForm() {
             <div className="flex items-center justify-between pb-2">
               <Checkbox
                 {...register('rememberMe')}
-                label="Remember Me"
+                label="Recuérdame"
                 className="[&>label>span]:font-medium"
               />
               <Link

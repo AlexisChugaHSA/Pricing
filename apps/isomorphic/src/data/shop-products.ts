@@ -1,8 +1,15 @@
+
+
+
+
+
+
+
 export const modernProductsGrid = [
   {
     id: 1,
     thumbnail: `https://isomorphic-furyroad.s3.amazonaws.com/public/products/modern/1.webp`,
-    title: 'Casio Watch',
+    title: 'Casio Watch2',
     description: 'Casio Classic Watch',
     price: 295.0,
     sale_price: 320.0,

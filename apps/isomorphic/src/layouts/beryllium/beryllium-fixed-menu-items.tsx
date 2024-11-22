@@ -238,7 +238,7 @@ export const berylliumMenuItems: MenuItemsType[] = [
         ],
       },
       {
-        name: 'Invoice',
+        name: 'Facturación',
         description: 'Professional-looking invoices for each customer order',
         icon: PiCurrencyDollar,
         subMenuItems: [
