@@ -66,7 +66,7 @@ export default function Acquisition({ className }: { className?: string }) {
             <Title as="h6" className="font-semibold">
               13.89%
             </Title>
-            <Text className="text-gray-500">Bounce Rate</Text>
+            <Text className="text-gray-500">Bounce Ratetest</Text>
           </div>
         </div>
         <div className="flex items-start">

@@ -25,7 +25,7 @@ export default function SignInForm() {
     signIn('credentials', {
       ...data,
     });
-    // setReset({ email: "", password: "", isRememberMe: false });
+    setReset({ email: "", password: "", isRememberMe: false });
   };
 
   return (

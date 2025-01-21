@@ -1,30 +1,59 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTable } from '@hooks/use-table';
 import { useColumn } from '@hooks/use-column';
-import { Button } from 'rizzui';
+import { PiCaretDownBold, PiCaretUpBold } from 'react-icons/pi';
 import ControlledTable from '@/app/shared/controlled-table/index';
-import { getColumns } from '@/app/shared/invoice/invoice-list/columns';
+import { getColumnsCCrecos } from './columns';
+import { ActionIcon } from 'rizzui';
+import cn from '@utils/class-names';
+import ExpandedOrderRowCCrecos from './expanded-row';
+// dynamic import
 const FilterElement = dynamic(
-  () => import('@/app/shared/invoice/invoice-list/filter-element'),
+  () => import('@/app/shared/ecommerce/order/order-list/filter-element'),
   { ssr: false }
 );
-const TableFooter = dynamic(() => import('@/app/shared/table-footer'), {
-  ssr: false,
-});
+
+function CustomExpandIcon(props: any) {
+  return (
+    <ActionIcon
+      size="sm"
+      variant="outline"
+      rounded="full"
+      className="expand-row-icon ms-2"
+      onClick={(e) => {
+        props.onExpand(props.record, e);
+      }}
+    >
+      {props.expanded ? (
+        <PiCaretUpBold className="h-3.5 w-3.5" />
+      ) : (
+        <PiCaretDownBold className="h-3.5 w-3.5" />
+      )}
+    </ActionIcon>
+  );
+}
 
 const filterState = {
-  amount: ['', ''],
+  price: ['', ''],
   createdAt: [null, null],
-  dueDate: [null, null],
+  updatedAt: [null, null],
   status: '',
 };
 
-export default function InvoiceTable({ data = [] }: { data: any[] }) {
-  if(data.length > 0){
+export default function TableComparativaCrecos({
+  data = [],
+  variant = 'modern',
+  className,
+}: {
+  data: any[];
+  variant?: 'modern' | 'minimal' | 'classic' | 'elegant' | 'retro';
+  className?: string;
+}) {
   const [pageSize, setPageSize] = useState(10);
+
   const onHeaderCellClick = (value: string) => ({
     onClick: () => {
       handleSort(value);
@@ -35,7 +64,7 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
     handleDelete(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(data)
+
   const {
     isLoading,
     isFiltered,
@@ -49,48 +78,32 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
     handleSearch,
     sortConfig,
     handleSort,
-    selectedRowKeys,
-    setSelectedRowKeys,
-    handleRowSelect,
-    handleSelectAll,
     handleDelete,
     handleReset,
   } = useTable(data, pageSize, filterState);
 
-  const columns = React.useMemo(
-    () =>
-      getColumns({
-        data,
-        sortConfig,
-        checkedItems: selectedRowKeys,
-        onHeaderCellClick,
-        onDeleteItem,
-        onChecked: handleRowSelect,
-        handleSelectAll,
-      }),
+  const columns = useMemo(
+    () => getColumnsCCrecos({ sortConfig, onHeaderCellClick, onDeleteItem }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      selectedRowKeys,
-      onHeaderCellClick,
-      sortConfig.key,
-      sortConfig.direction,
-      onDeleteItem,
-      handleRowSelect,
-      handleSelectAll,
-    ]
+    [onHeaderCellClick, sortConfig.key, sortConfig.direction, onDeleteItem]
   );
 
   const { visibleColumns, checkedColumns, setCheckedColumns } =
     useColumn(columns);
+
   return (
-    <>
+    <div className={cn(className)}>
       <ControlledTable
-        variant="modern"
-        data={tableData}
+        variant={variant}
         isLoading={isLoading}
         showLoadingText={true}
+        data={tableData}
         // @ts-ignore
         columns={visibleColumns}
+        expandable={{
+          expandIcon: CustomExpandIcon,
+          expandedRowRender: (record) => <ExpandedOrderRowCCrecos record={record} />,
+        }}
         paginatorOptions={{
           pageSize,
           setPageSize,
@@ -107,9 +120,11 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
             handleSearch(event.target.value);
           },
           hasSearched: isFiltered,
+          hideIndex: 1,
           columns,
           checkedColumns,
           setCheckedColumns,
+          enableDrawerFilter: true,
         }}
         filterElement={
           <FilterElement
@@ -119,22 +134,10 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
             handleReset={handleReset}
           />
         }
-        tableFooter={
-          <TableFooter
-            checkedItems={selectedRowKeys}
-            handleDelete={(ids: string[]) => {
-              setSelectedRowKeys([]);
-              handleDelete(ids);
-            }}
-          >
-            <Button size="sm" className="dark:bg-gray-300 dark:text-gray-800">
-              Re-send {selectedRowKeys.length}{' '}
-              {selectedRowKeys.length > 1 ? 'Invoices' : 'Invoice'}{' '}
-            </Button>
-          </TableFooter>
+        className={
+          'rounded-md border border-muted text-sm shadow-sm [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:h-60 [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:justify-center [&_.rc-table-row:last-child_td.rc-table-cell]:border-b-0 [&_thead.rc-table-thead]:border-t-0'
         }
-        className="rounded-md border border-muted text-sm shadow-sm [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:h-60 [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:justify-center [&_.rc-table-row:last-child_td.rc-table-cell]:border-b-0 [&_thead.rc-table-thead]:border-t-0"
       />
-    </>
-  );}else{console.log("Cargando facturas...")}
+    </div>
+  );
 }

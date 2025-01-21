@@ -202,7 +202,7 @@ export const getColumns = ({
           placement="top-start"
           color="invert"
         >
-          <Link href={routes.invoice.details(row.id_factura)}>
+          <Link href={routes.invoice.details(String(row.id_factura))}>
             <ActionIcon
               as="span"
               size="sm"

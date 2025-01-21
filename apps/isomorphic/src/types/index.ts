@@ -53,15 +53,16 @@ export interface CartItem {
 }
 
 export type Product = {
-  id: number;
+  id_producto:number,
+  id_categoria?:number,
+  nombre:string,
+  descripcion:string,    
+  precio:number,  
   slug?: string;
-  title: string;
-  description?: string;
-  price: number;
-  sale_price?: number;
-  thumbnail: string;
-  colors?: ProductColor[];
-  sizes?: number[];
+  descuento?:number,  
+  url?:string,  
+  imagen:string,  
+  tags?:string,  
 };
 
 export type PosProduct = {

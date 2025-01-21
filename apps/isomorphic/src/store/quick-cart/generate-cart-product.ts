@@ -8,12 +8,12 @@ interface CartProduct extends Omit<Product, 'colors' | 'sizes'> {
 
 export function generateCartProduct(product: CartProduct): CartItem {
   return {
-    id: product?.id,
-    name: product?.title,
-    slug: generateSlug(product?.title),
-    description: product?.description,
-    image: product?.thumbnail,
-    price: product?.price,
+    id: product?.id_producto,
+    name: product?.nombre,
+    slug: generateSlug(product?.nombre),
+    description: product?.descripcion,
+    image: product?.imagen,
+    price: product?.precio,
     quantity: 1,
     size: product.size,
     color: product.color,

@@ -9,13 +9,27 @@ import ProductDetailsSummery from '@/app/shared/ecommerce/product/product-detail
 import ProductDetailsReview from '@/app/shared/ecommerce/product/product-details-review';
 import { modernProductsGrid } from '@/data/shop-products';
 import { generateSlug } from '@utils/generate-slug';
+import { obtenerProductos, Producto } from '@/app/services/producto.service';
+import { useEffect, useState } from 'react';
 
 export default function ProductDetails() {
+  const [products, setProducts] = useState<Producto[]>([]);
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await obtenerProductos();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error al cargar los productos:', error);
+      }
+    };
+    loadProducts();
+  }, []);
   const params = useParams();
   const product =
-    modernProductsGrid.find(
-      (item) => generateSlug(item.title) === params.slug
-    ) ?? modernProductsGrid[0];
+    products.find(
+      (item) => generateSlug(item.nombre) === params.slug
+    ) ?? products[0];
 
   return (
     <div className="@container">

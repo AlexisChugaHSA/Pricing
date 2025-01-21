@@ -56,10 +56,10 @@ export default function ProductDetailsSummery({
     <>
       <div className="border-b border-muted pb-6 @lg:pb-8">
         <Title as="h2" className="mb-2.5 font-bold @6xl:text-4xl">
-          {product?.title}
+          {product?.nombre}
         </Title>
         <Text as="p" className="text-base">
-          {product?.description}
+          {product?.descripcion}
         </Text>
       </div>
 
@@ -67,10 +67,10 @@ export default function ProductDetailsSummery({
         <form className="pb-8 pt-5" onSubmit={methods.handleSubmit(onSubmit)}>
           <div className="mb-1.5 mt-2 flex items-end font-lexend text-base">
             <div className="-mb-0.5 text-2xl font-semibold text-gray-900 lg:text-3xl">
-              {toCurrency(product?.price as number)}
+              {toCurrency(product?.precio as number)}
             </div>
             <del className="ps-1.5 font-medium text-gray-500">
-              {toCurrency(product?.sale_price as number)}
+              {toCurrency(product?.precio as number)}
             </del>
             <div className="ps-1.5 text-red">
               ({calculatePercentage(295, 320)}% OFF)
@@ -88,14 +88,15 @@ export default function ProductDetailsSummery({
               Size Guide
             </Button>
           </div>
-
+          {/*
+          
           {!isEmpty(product.sizes) && <GetSize sizes={product.sizes} />}
 
           <Title as="h6" className="mb-3.5 mt-6 font-inter text-sm font-medium">
             Select Color
           </Title>
 
-          <GetColor colors={product?.colors ?? []} />
+          <GetColor colors={product?.colors ?? []} />*/}
 
           <div className="grid grid-cols-1 gap-4 pt-7 @md:grid-cols-2 @xl:gap-6">
             <Button

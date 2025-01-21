@@ -117,7 +117,7 @@ export const getColumns = ({ sortConfig, onHeaderCellClick }: Columns) => [
     ),
   },
   {
-    title: <HeaderCell title="AVG. SESSION DURATION" />,
+    title: <HeaderCell title="AVG. SESSION DURATIONtest" />,
     dataIndex: 'createdAt',
     key: 'createdAt',
     width: 150,

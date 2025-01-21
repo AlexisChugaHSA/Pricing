@@ -4,12 +4,14 @@ import Image from 'next/image';
 import UnderlineShape from '@components/shape/underline';
 import { metaObject } from '@/config/site.config';
 import IconImage from '@public/icon.png'
+import React, { useEffect, useState } from 'react';
 
 export const metadata = {
   ...metaObject('Sign In'),
 };
 
 export default function SignIn() {
+
   return (
     <AuthWrapperOne
       title={

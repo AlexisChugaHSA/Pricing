@@ -19,12 +19,10 @@ export default function ProductMinimalCard({
 }: ProductProps) {
   const {
     slug,
-    title,
-    thumbnail,
-    description,
-    price,
-    sale_price,
-    colors = [],
+    nombre,
+    imagen,
+    descripcion,
+    precio,
   } = product;
 
   return (
@@ -32,14 +30,14 @@ export default function ProductMinimalCard({
       <div className="relative">
         <div className="relative mx-auto aspect-[4/5.06] w-full bg-gray-100">
           <Image
-            alt={title}
-            src={thumbnail}
+            alt={nombre}
+            src={imagen}
             fill
             priority
             quality={90}
             placeholder="blur"
             sizes="(max-width: 768px) 100vw"
-            blurDataURL={`/_next/image?url=${thumbnail}&w=10&q=1`}
+            blurDataURL={`/_next/image?url=${imagen}&w=10&q=1`}
             className="h-full w-full object-cover"
           />
         </div>
@@ -50,31 +48,27 @@ export default function ProductMinimalCard({
         <div className="pb-1 font-medium text-red-dark">Just In</div>
         <Link
           href={routes.eCommerce.productDetails(
-            String(slug ?? generateSlug(title))
+            String(slug ?? generateSlug(nombre))
           )}
         >
           <Title
             as="h6"
             className="mb-0.5 truncate font-semibold transition-colors hover:text-primary"
           >
-            {title}
+            {nombre}
           </Title>
         </Link>
         <Text as="p" className="mb-1 truncate">
-          {description}
+          {descripcion}
         </Text>
 
-        {colors?.length ? (
-          <div className="text-sm text-gray-500">
-            {colors?.length} {colors?.length > 1 ? 'Colors' : 'Color'}
-          </div>
-        ) : null}
+
 
         <div className="mt-3.5 flex items-center font-semibold text-gray-900">
-          {toCurrency(Number(price))}
-          {sale_price && (
+          {toCurrency(Number(precio))}
+          {precio && (
             <del className="ps-1.5 text-[13px] font-normal text-gray-500">
-              {toCurrency(Number(sale_price))}
+              {toCurrency(Number(precio))}
             </del>
           )}
         </div>

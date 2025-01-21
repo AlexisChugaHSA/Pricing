@@ -8,10 +8,13 @@ import hasSearchedParams from '@utils/has-searched-params';
 // Note: using shuffle to simulate the filter effect
 import shuffle from 'lodash/shuffle';
 import { routes } from '@/config/routes';
+import React, { useEffect } from 'react';
+import { obtenerProductos, Producto } from '@/app/services/producto.service';
 
 let countPerPage = 12;
 
 export default function ProductFeed() {
+  const [products, setProducts] = useState<Producto[]>([]);
   const [isLoading, setLoading] = useState(false);
   const [nextPage, setNextPage] = useState(countPerPage);
 
@@ -22,10 +25,23 @@ export default function ProductFeed() {
       setNextPage(nextPage + countPerPage);
     }, 600);
   }
+    // Carga inicial de productos
+    useEffect(() => {
+      const loadProducts = async () => {
+        try {
+          const data = await obtenerProductos();
+          setProducts(data);
+        } catch (error) {
+          console.error('Error al cargar los productos:', error);
+        }
+      };
+      loadProducts();
+    }, []);
+  
 
   const filteredData = hasSearchedParams()
-    ? shuffle(modernProductsGrid)
-    : modernProductsGrid;
+    ? shuffle(products)
+    : products;
 
   return (
     <div className="@container">
@@ -33,7 +49,7 @@ export default function ProductFeed() {
         {filteredData
           ?.slice(0, nextPage)
           ?.map((product, index) => (
-            <ProductModernCard key={product.id} product={product} routes={routes} />
+            <ProductModernCard key={product.id_producto} product={product} routes={routes} />
           ))}
       </div>
 
