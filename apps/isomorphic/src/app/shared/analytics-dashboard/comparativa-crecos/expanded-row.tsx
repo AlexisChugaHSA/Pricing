@@ -3,14 +3,14 @@ import { PiXBold } from 'react-icons/pi';
 import { Title, Text } from 'rizzui';
 
 export default function ExpandedOrderRowCCrecos({ record }: any) {
-  if (record?.products?.length === 0) {
+  if (record?.productos?.length === 0) {
     return <Text>No product available</Text>;
   }
   return (
     <div className="grid grid-cols-1 divide-y bg-gray-0 px-3.5 dark:bg-gray-50">
-      {record?.products.map((product: any) => (
+      {record?.productos.map((product: any) => (
         <article
-          key={record.id + product.name}
+          key={record.id + product.nombre}
           className="flex items-center  py-6 first-of-type:pt-2.5 last-of-type:pb-2.5" style={{gap:"150px"}}
         >
           <div className="flex items-start" style={{ maxWidth: "100px", flexShrink: 0 }}>
@@ -18,14 +18,14 @@ export default function ExpandedOrderRowCCrecos({ record }: any) {
               <Image
                 fill
                 className="object-cover"
-                src={product.image}
-                alt={product.name}
+                src={product.imagen}
+                alt={product.nombre}
               />
             </div>
             <header style={{ maxWidth: "100px", flexShrink: 0 }}>
             <Text className="mb-1 text-gray-500">Producto:</Text>
               <Title as="h4" className="mb-0.5 text-sm font-medium">
-                {product.name}
+                {product.nombre}
               </Title>
 
             </header>

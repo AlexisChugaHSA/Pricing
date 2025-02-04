@@ -10,6 +10,7 @@ import { Form } from '@ui/form';
 import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
 import { User } from '@/data/user';
+import { Usuario,loginUsuario } from '../services/usuario.service';
 
 const initialValues: LoginSchema = {
   email: 'admin@admin.com',
@@ -25,10 +26,30 @@ export default function SignInForm() {
   //TODO: why we need to reset it here
   const [reset, setReset] = useState({});
 
-  const onSubmit: SubmitHandler<LoginSchema> = (data) => {
+  const onSubmit: SubmitHandler<LoginSchema> = async (data) => {
     user.correo=data.email
     user.password=data.password
-    console.log(user);
+    const handleLogin = async () => {
+      try {
+        if (!user.correo || !user.password) {
+          console.log('No se proporcionaron credenciales');
+          return;
+        }
+        const response = await loginUsuario(user.correo, user.password || '');
+        const usuario: Usuario = { 
+          id_usuario:response.id_usuario,
+          usuario:response.usuario,
+          nombre:response.nombre,
+          apellido:response.apellido,
+          telefono:response.telefono,
+          token:response.token
+        };
+        localStorage.setItem('usuario', JSON.stringify(usuario));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    await handleLogin();
     signIn('credentials', {
       ...data,
     });

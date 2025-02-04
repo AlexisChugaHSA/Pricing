@@ -12,17 +12,21 @@ import EfectivoPorEmpresa from './efectivo_por_empresa';
 import EvolutivoEfectivo from './evolutivo_efectivo';
 import ComparativaCrecos from './comparativa-crecos/comparativa_crecos';
 import ComparativaModelos from './comparativa-de-modelos/comparativa_modelos'; 
+import PieChartComponent from './efectivo_por_empresa_pie';
 
 export default function AnalyticsDashboard() {
   return (
     <div className="@container">
       <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
-        <StatCards className="grid-cols-1 @xl:grid-cols-2 @4xl:col-span-2 @6xl:grid-cols-4 @7xl:col-span-12" />
+        <StatCards className="grid-cols-1 @xl:grid-cols-2 @4xl:col-span-2 @6xl:grid-cols-3 @7xl:col-span-12" />
       </div> <br />
       <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-12 @7xl:grid-cols-12 3xl:gap-8">
-        <EfectivoPorEmpresa className="@4xl:col-span-5 @7xl:col-span-6" />
-
-        <EvolutivoEfectivo className="@4xl:col-span-7 @7xl:col-span-6" />
+        <EfectivoPorEmpresa className="@4xl:col-span-7 @7xl:col-span-7" />
+        <PieChartComponent className="@4xl:col-span-5 @7xl:col-span-5" />
+      </div>
+      <br />
+      <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-1 @7xl:grid-cols-1 3xl:gap-8">
+      <EvolutivoEfectivo className="@4xl:col-span-1 @7xl:col-span-1" />
       </div>
       <br />
       <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-1 @7xl:grid-cols-1 3xl:gap-8">

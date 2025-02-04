@@ -55,6 +55,16 @@ export const getColumnsCCrecos = ({
   onDeleteItem,
   onHeaderCellClick,
 }: Columns) => [
+  {
+    title: <HeaderCell title="Imagen" />,
+    dataIndex: 'imagen',
+    key: 'imagen',
+    width: 10,
+    className: 'flex-column',
+    render: (value: string, row: any) => (
+      <img src={'https://picsum.photos/200'} alt={row.modelo} className="w-16 h-16 object-cover rounded-md" />
+    ),
+  },
 
   {
     title: <HeaderCell title="Marca-Modelo" />,
@@ -63,7 +73,7 @@ export const getColumnsCCrecos = ({
     width: 10,
     className: 'flex-column',
     render: (_: any, row: any) => (
-        row.name
+        row.marca+' '+row.modelo
     ),
   },
   {
@@ -72,13 +82,13 @@ export const getColumnsCCrecos = ({
         title="Efectivo"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'price'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'total_efectivo'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('price'),
-    dataIndex: 'price',
-    key: 'price',
+    onHeaderCell: () => onHeaderCellClick('total_efectivo'),
+    dataIndex: 'total_efectivo',
+    key: 'total_efectivo',
     width: 10,
     render: (value: string) => (
       <Text className="font-medium text-gray-700">${value}</Text>
@@ -90,13 +100,13 @@ export const getColumnsCCrecos = ({
         title="Cuota"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'cuota'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'total_cuota'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('cuota'),
-    dataIndex: 'cuota',
-    key: 'cuota',
+    onHeaderCell: () => onHeaderCellClick('total_cuota'),
+    dataIndex: 'total_cuota',
+    key: 'total_cuota',
     width: 10,
     render: (value: string) => (
       <Text className="font-medium text-gray-700">${value}</Text>
@@ -108,13 +118,13 @@ export const getColumnsCCrecos = ({
         title="Plazo"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'plazo'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'total_plazo'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('plazo'),
-    dataIndex: 'plazo',
-    key: 'plazo',
+    onHeaderCell: () => onHeaderCellClick('total_plazo'),
+    dataIndex: 'total_plazo',
+    key: 'total_plazo',
     width: 10,
     render: (value: string) => (
       <Text className="font-medium text-gray-700">${value}</Text>

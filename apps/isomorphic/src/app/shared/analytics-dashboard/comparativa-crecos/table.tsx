@@ -53,7 +53,6 @@ export default function TableComparativaCrecos({
   className?: string;
 }) {
   const [pageSize, setPageSize] = useState(10);
-
   const onHeaderCellClick = (value: string) => ({
     onClick: () => {
       handleSort(value);

@@ -4,6 +4,8 @@ import MetricCard from '@components/cards/metric-card';
 import { Text } from 'rizzui';
 import cn from '@utils/class-names';
 import { BarChart, Bar, ResponsiveContainer } from 'recharts';
+import { Indicador, obtenerDatos } from '@/app/services/indicadores.service';
+import { useEffect, useState } from 'react';
 
 const trafficData = [
   {
@@ -122,65 +124,87 @@ const barData = [
 const analyticsStatData = [
   {
     id: '1',
-    title: 'Website Traffic',
-    metric: '91.6K',
-    info: 'Number of the visitors on the website.',
-    increased: true,
-    decreased: false,
-    percentage: '+32.40',
-    fill: '#015DE1',
-    chart: trafficData,
+    titulo: 'Efectivo Promedio',
+    valor: '500',
+    descripcion: 'Number of the visitors on the website.',
+    porcentaje: '+32.40',
   },
   {
     id: '2',
-    title: 'Conversion Rate',
-    metric: '12.56%',
-    info: 'Number of the visitors turned into user.',
-    increased: false,
-    decreased: true,
-    percentage: '-4.40',
-    fill: '#048848',
-    chart: conventionRateData,
+    titulo: 'Promedio Cuotas',
+    valor: '300',
+    descripcion: 'Number of the visitors turned into user.',
+    porcentaje: '-4.40',
   },
   {
     id: '3',
-    title: 'Bounce Rate',
-    metric: '45.33%',
-    info: 'Number of the visitors went without visiting.',
-    increased: true,
-    decreased: false,
-    percentage: '+32.40',
-    fill: '#B92E5D',
-    chart: barData,
-  },
-  {
-    id: '4',
-    title: 'Session Duration',
-    metric: '2.30 hrs',
-    info: 'Amount of time users used the website.',
-    increased: true,
-    decreased: false,
-    percentage: '+32.40',
-    fill: '#8200E9',
-    chart: barData,
+    titulo: 'Promedio Plazo',
+    valor: '5',
+    descripcion: 'Number of the visitors went without visiting.',
+    porcentaje: '+32.40',
   },
 ];
 
+
+
+
 export default function StatCards({ className }: { className?: string }) {
+  const [datos, setDatos] = useState<Indicador[]>([]);
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
+  useEffect(() => {
+    obtenerDatos(token)
+      .then((data) => {
+        setDatos(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener las facturas:', error);
+      });
+  }, []);
+  const analyticsStatData = datos
+  const analyticsStatData2 = analyticsStatData.map((item) => {
+    let fill = '';
+    let chart: any[] = [];;
+  
+    if (item.titulo.includes('Efectivo')) {
+      fill = '#015DE1';
+      chart = trafficData;
+    } else if (item.titulo.includes('Cuotas')) {
+      fill = '#048848';
+      chart = conventionRateData;
+    } else if (item.titulo.includes('Plazo')) {
+      fill = '#B92E5D';
+      chart = barData;
+    }
+  
+    return { ...item, fill, chart };
+  });
+  
+  const formattedAnalyticsStatData = analyticsStatData2.map((item) => {
+    let formattedValor = item.valor;
+    if (item.titulo.includes('Efectivo') || item.titulo.includes('Cuotas')) {
+      formattedValor = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+      }).format(Number(item.valor));
+    }
+    return { ...item, valor: formattedValor };
+  });
+  if(formattedAnalyticsStatData && formattedAnalyticsStatData.length > 0){
   return (
     <div
       className={cn('grid grid-cols-1 gap-5 3xl:gap-8 4xl:gap-9', className)}
     >
-      {analyticsStatData.map((stat) => (
+      {formattedAnalyticsStatData.map((stat) => (
         <MetricCard
-          key={stat.title + stat.id}
-          title={stat.title}
-          metric={stat.metric}
+          key={stat.titulo + stat.id}
+          title={stat.titulo}
+          metric={stat.valor}
           rounded="lg"
           metricClassName="text-2xl mt-1"
           info={
             <Text className="mt-4 max-w-[150px] text-sm text-gray-500">
-              {stat.info}
+              {stat.descripcion}
             </Text>
           }
           chart={
@@ -189,7 +213,7 @@ export default function StatCards({ className }: { className?: string }) {
                 style={{ color: stat.fill }}
                 className="mb-3 text-sm font-medium"
               >
-                {stat.percentage}%
+                {stat.porcentaje}%
               </div>
               <div className="h-12 w-20 @[16.25rem]:h-16 @[16.25rem]:w-24 @xs:h-20 @xs:w-28">
                 <ResponsiveContainer width="100%" height="100%">
@@ -209,5 +233,5 @@ export default function StatCards({ className }: { className?: string }) {
         />
       ))}
     </div>
-  );
+  );}
 }

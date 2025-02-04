@@ -58,12 +58,12 @@ export const getColumnsCCrecos = ({
 
   {
     title: <HeaderCell title="Empresa" />,
-    dataIndex: 'customer',
-    key: 'customer',
+    dataIndex: 'nombre',
+    key: 'nombre',
     width: 10,
     className: 'flex-column',
     render: (_: any, row: any) => (
-        row.name
+        row.nombre
     ),
   },
   {
@@ -72,13 +72,13 @@ export const getColumnsCCrecos = ({
         title="Efectivo"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'price'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'efectivo'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('price'),
-    dataIndex: 'price',
-    key: 'price',
+    onHeaderCell: () => onHeaderCellClick('efectivo'),
+    dataIndex: 'efectivo',
+    key: 'efectivo',
     width: 10,
     render: (value: string) => (
       <Text className="font-medium text-gray-700">${value}</Text>

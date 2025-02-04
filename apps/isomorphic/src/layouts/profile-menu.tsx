@@ -7,6 +7,7 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { Usuario } from '@/app/services/usuario.service';
 
 export default function ProfileMenu({
   buttonClassName,
@@ -68,20 +69,19 @@ function ProfileMenuPopover({ children }: React.PropsWithChildren<{}>) {
 
 const menuItems = [
   {
-    name: 'My Profile',
+    name: 'Mi perfil',
     href: routes.profile,
   },
   {
-    name: 'Account Settings',
+    name: 'Configuración de cuenta',
     href: routes.forms.profileSettings,
-  },
-  {
-    name: 'Activity Log',
-    href: '#',
   },
 ];
 
 function DropdownMenu() {
+  const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    const usuario: Usuario = JSON.parse(usuarioGuardado) as Usuario; 
   return (
     <div className="w-64 text-left rtl:text-right">
       <div className="flex items-center border-b border-gray-300 px-6 pb-5 pt-6">
@@ -91,9 +91,9 @@ function DropdownMenu() {
         />
         <div className="ms-3">
           <Title as="h6" className="font-semibold">
-            Albert Flores
+          {usuario.nombre+' '+usuario.apellido} 
           </Title>
-          <Text className="text-gray-600">flores@doe.io</Text>
+          <Text className="text-gray-600"> {usuario.usuario}</Text>
         </div>
       </div>
       <div className="grid px-3.5 py-3.5 font-medium text-gray-700">
@@ -113,9 +113,12 @@ function DropdownMenu() {
           variant="text"
           onClick={() => signOut()}
         >
-          Sign Out
+          Cerrar Sesión
         </Button>
       </div>
     </div>
-  );
+  ); } else {
+    console.log('No hay usuario guardado en localStorage');
+  }
+  
 }
