@@ -22,7 +22,6 @@ import WidgetCard from '@components/cards/widget-card';
               });
           }, []);
         const orderData = datos
-        
         if(orderData && orderData.length > 0){
     return (
       <WidgetCard title={'Comparativa Modelos'} className="flex flex-col gap-4">

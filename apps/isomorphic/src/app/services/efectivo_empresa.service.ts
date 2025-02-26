@@ -8,6 +8,11 @@ export interface Efectivo_Empresa {
   efectivo: number;
 }
 
+export interface Efectivo_EmpresaPie {
+  empresa: string;
+  porcentaje: number;
+}
+
 
 
 export async function obtenerDatos( token: string): Promise<Efectivo_Empresa[]> {
@@ -24,4 +29,17 @@ export async function obtenerDatos( token: string): Promise<Efectivo_Empresa[]> 
   }
 }
 
+export async function obtenerDatosPie( token: string): Promise<Efectivo_EmpresaPie[]> {
+  try {
+    const response = await axios.get<Efectivo_EmpresaPie[]>(url+'empresa-efectivo-pie', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los datos Efectivo- EMpresa', error);
+    throw error;
+  }
+}
 

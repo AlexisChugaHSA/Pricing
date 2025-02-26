@@ -13,14 +13,15 @@ export interface Usuario {
   token?:string
 }
 
-export async function guardarUsuario(usuario: Usuario): Promise<void> {
+export async function guardarUsuario(usuario: Usuario): Promise<{ id_usuario: number }> {
   try {
-    const response = await axios.post( 'guardar-usuario', usuario, {
+    const response = await axios.post(url + 'guardar-usuario', usuario, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
     console.log('Usuario guardado exitosamente:', response.data);
+    return response.data;
   } catch (error) {
     console.error('Error al guardar el usuario:', error);
     throw error;

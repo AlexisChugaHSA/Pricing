@@ -49,7 +49,7 @@ export default function ProjectSummaryToolbar<
           <Popover.Trigger>
             <ActionIcon
               variant="outline"
-              title={'Toggle Columns'}
+              title={'Toggle Columns Test'}
               className="h-auto w-auto p-1"
             >
               <PiTextColumns strokeWidth={3} className="size-6" />
@@ -58,7 +58,7 @@ export default function ProjectSummaryToolbar<
           <Popover.Content className="z-0">
             <div className="px-0.5 pt-2 text-left rtl:text-right">
               <Title as="h6" className="mb-1 px-0.5 text-sm font-semibold">
-                Toggle Columns
+                Toggle Columns Test
               </Title>
               <div className="grid grid-cols-2 gap-x-0 gap-y-5 px-1.5 pb-3.5 pt-4">
                 {table.getAllLeafColumns().map((column) => {

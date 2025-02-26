@@ -8,7 +8,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import DropdownAction from '@components/charts/dropdown-action';
 
 const data = [
-  { name: 'Dental Care', value: 45 },
+  { name: 'Dental Caro', value: 65 },
   { name: 'Neurology', value: 58 },
   { name: 'Gynecology', value: 32 },
   { name: 'Orthopedic', value: 16 },
@@ -64,7 +64,7 @@ export default function Patients({ className }: { className?: string }) {
 
   return (
     <WidgetCard
-      title="Appointment by Patients"
+      title="Appointment by Patients Test"
       titleClassName="text-gray-800 sm:text-lg font-inter"
       headerClassName="items-center"
       className={cn('@container', className)}
@@ -111,7 +111,7 @@ export default function Patients({ className }: { className?: string }) {
             </Title>
           </div>
           <div className="">
-            <Detail color={COLORS[1]} value={58} text="Neurology" />
+            <Detail color={COLORS[1]} value={65} text="Neurology" />
             <Detail color={COLORS[0]} value={45} text="Dental Care" />
             <Detail color={COLORS[2]} value={32} text="Gynecology" />
             <Detail color={COLORS[3]} value={16} text="Orthopedic" />

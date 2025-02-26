@@ -33,7 +33,7 @@ export default function PostSummary({ className }: { className?: string }) {
     <WidgetCard
       title={
         <span>
-          <span className="hidden @lg:inline-block">Post</span> Summary
+          <span className="hidden @lg:inline-block">Post</span> Summary Test
         </span>
       }
       headerClassName="items-center"

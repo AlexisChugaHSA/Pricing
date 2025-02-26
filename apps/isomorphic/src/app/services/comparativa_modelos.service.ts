@@ -8,7 +8,9 @@ export interface Comparativa_Modelos {
   marca: string;
   modelo: string;
   total_efectivo: string;
+  p_total_efectivo: string;
   total_cuota: string;
+  p_total_cuota: string;
   total_plazo: string;
   empresas: Empresa[];
 }
@@ -17,8 +19,11 @@ export interface Empresa {
   id: string;
   empresa: string;
   efectivo: string;
+  p_efectivo:string
   cuota: string;
+  p_cuota:string;
   plazo: string;
+  url: string;
 }
 
 

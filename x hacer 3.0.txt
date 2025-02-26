@@ -1,0 +1,20 @@
+1. Aumentar un buscador en el filtro de características y modelos
+2. Borrar todo lo de producto detalle dejar solo las fotos XXXXX
+3. llenar productos similares con los otros productos}
+4. Ya llenar el carrito de compras
+5. link a la foto del producto para que lleve a detalles
+6. Quitar corazon e wish y filtros
+7. Comentar el botón de add invoice y dejar export
+8. de detalle factura quitar QR
+9. cambiar ICONo por HSA y logo
+10. Poner datos de la empresa en From
+11. Solo dejar la fecha de creación de la factura
+12. quitar Notas
+13. http://localhost:3000/ecommerce/orders/FC6723757651DB74 llenar la orden de compra
+14. Poner el botón de PayPal
+15. Crear el servicio PayPal
+16. Completar el proceso de compra pagar, que se refleje en el sandbox, y que se vea la factura
+17. Crear un dashboard de producto Demo
+18. borrar todas las graficas debajo de las tablas
+
+

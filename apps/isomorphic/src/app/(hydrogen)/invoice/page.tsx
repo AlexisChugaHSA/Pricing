@@ -34,7 +34,7 @@ const pageHeader = {
 
 export default function InvoiceListPage() {
   const [facturas, setFacturas] = useState<Factura[]>([]); // Estado para almacenar las facturas.
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM5ODA4MjA3LCJqdGkiOiJkNzQxOGM0NC1mMjc3LTQwMTAtODNmZi1kMTZjMTM2YzEzMzUiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM5ODA4MjA3LCJjc3JmIjoiODI1YjEzMDYtMmQxZS00Y2Y2LTk5NTctZGU4MmNlNDVkMjYzIiwiZXhwIjoxNzM5ODQ0MjA3LCJpc19hZG1pbiI6ZmFsc2V9.y2H8ktiTPiP0M5vLVdmxLNWRBgCxJnArCaTK0TjGT_4';
 
   useEffect(() => {
     obtenerFacturas(45,token ) // Usa el ID que corresponda.

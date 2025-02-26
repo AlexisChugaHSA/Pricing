@@ -33,7 +33,7 @@ export default function SearchWidget({
     setOpen(() => false);
     return () => setOpen(() => false);
   }, [pathname]);
-
+/*
   return (
     <>
       <SearchTrigger
@@ -53,5 +53,5 @@ export default function SearchWidget({
         <SearchList onClose={() => setOpen(false)} />
       </Modal>
     </>
-  );
+  );*/
 }

@@ -8,11 +8,15 @@ import { PiChatCircleText, PiUsers } from 'react-icons/pi';
 import { useLayout } from '@/layouts/use-layout';
 import { LAYOUT_OPTIONS } from '@/config/enums';
 import { useBerylliumSidebars } from '@/layouts/beryllium/beryllium-utils';
+import { Usuario } from '@/app/services/usuario.service';
 
 export default function ProfileHeader() {
   const { layout } = useLayout();
   const { expandedLeft } = useBerylliumSidebars();
   const [follow, setFollow] = useState(false);
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      const usuario: Usuario = JSON.parse(usuarioGuardado) as Usuario; 
   return (
     <div
       className={cn(
@@ -51,10 +55,10 @@ export default function ProfileHeader() {
               as="h1"
               className="text-lg font-bold capitalize leading-normal text-gray-900 @3xl:!text-xl 3xl:text-2xl"
             >
-              Andrie Jacsion
+              {usuario.nombre+' '+usuario.apellido}
             </Title>
             <Text className="text-xs text-gray-500 @3xl:text-sm 3xl:text-base">
-              @andrie.jack
+              {usuario.usuario}
             </Text>
             <ul className="mt-3 flex flex-wrap items-center gap-2 text-sm @3xl:mt-4 @3xl:gap-5 @3xl:text-base 3xl:text-lg">
               <li className="flex items-center">
@@ -88,5 +92,5 @@ export default function ProfileHeader() {
         </div>
       </div>
     </div>
-  );
+  );}
 }

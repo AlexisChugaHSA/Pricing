@@ -14,7 +14,10 @@ import {
   ResponsiveContainer,
   LabelList,
 } from 'recharts';
-import { Evolutivo_Efectivo,obtenerDatos } from '@/app/services/evolutivo_efectivo.service';
+import { Evolutivo_Efectivo,obtenerDatos, Evolutivo_Efectivo_Mes,obtenerDatosPorMes } from '@/app/services/evolutivo_efectivo.service';
+import DropdownAction from '@components/charts/dropdown-action';
+import { title } from 'process';
+import Meses from '@/app/services/consulta.service';
 
 
 
@@ -45,6 +48,24 @@ const barColors = [
   '#5a5fd7', '#10b981', '#f97316', '#e11d48', '#6366f1', 
   '#4ade80', '#d97706', '#eab308', '#8b5cf6', '#ef4444'
 ];
+const viewOptions = [{ value: "0", label: "Todos" },...Meses];
+/*function handleChange(viewType: string) {
+  const [datos, setDatos] = useState<Evolutivo_Efectivo_Mes[]>([]); 
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
+    useEffect(() => {
+      obtenerDatosPorMes(token,'01') 
+        .then((data) => {
+          setDatos(data); 
+        })
+        .catch((error) => {
+          console.error('Error al obtener las facturas:', error);
+        });
+    }, []);
+  const data = datos
+  //console.log(data)
+  console.log('viewType', viewType);
+}*/
+
 export default function EvolutivoEfectivo({ className }: { className?: string }) {
     const [datos, setDatos] = useState<Evolutivo_Efectivo[]>([]); 
     const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
@@ -58,10 +79,29 @@ export default function EvolutivoEfectivo({ className }: { className?: string })
           console.error('Error al obtener las facturas:', error);
         });
     }, []);
+    function handleChange(viewType: string) {
+      const viewTypeStr = viewType.toString();
+      obtenerDatos(token, viewTypeStr === '0' ? undefined : viewTypeStr)
+        .then((data) => {
+          setDatos(data);
+          console.log(data);
+        })
+        .catch((error) => console.error('Error al obtener las facturas:', error));
+    }
+    
+  
   const data = datos
   if(data && data.length > 0){
   return (
-    <WidgetCard title={'Evolutivo Efectivo'} className={className}>
+    <WidgetCard title={'Evolutivo Efectivo'} className={className} 
+          action={
+            <DropdownAction
+              className="rounded-lg border"
+              options={viewOptions}
+              onChange={handleChange}
+            />
+          }>
+      
       <div className="mt-2 w-full lg:mt-2" style={{ height: '100%' }}>
         <ResponsiveContainer width="100%" height={400}>
         <LineChart

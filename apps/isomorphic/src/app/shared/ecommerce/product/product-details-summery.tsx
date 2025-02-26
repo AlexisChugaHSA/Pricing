@@ -73,12 +73,13 @@ export default function ProductDetailsSummery({
               {toCurrency(product?.precio as number)}
             </del>
             <div className="ps-1.5 text-red">
-              ({calculatePercentage(295, 320)}% OFF)
+              ({calculatePercentage(295, 320)}% Descuento)
             </div>
           </div>
           <div className="font-medium text-green-dark">
-            Inclusive of all taxes
+            Incluido impuestos
           </div>
+          {/*
 
           <div className="mb-3.5 flex items-start justify-between pt-6">
             <Title as="h6" className="font-inter text-sm font-medium">
@@ -88,7 +89,7 @@ export default function ProductDetailsSummery({
               Size Guide
             </Button>
           </div>
-          {/*
+          
           
           {!isEmpty(product.sizes) && <GetSize sizes={product.sizes} />}
 
@@ -106,9 +107,10 @@ export default function ProductDetailsSummery({
               className="h-12 text-sm lg:h-14 lg:text-base"
             >
               <PiShoppingCartSimple className="me-2 h-5 w-5 lg:h-[22px] lg:w-[22px]" />{' '}
-              Add To Cart
+              Añadir al carrito
             </Button>
-            <WishlistButton />
+             {/*
+            <WishlistButton />*/}
           </div>
         </form>
       </FormProvider>

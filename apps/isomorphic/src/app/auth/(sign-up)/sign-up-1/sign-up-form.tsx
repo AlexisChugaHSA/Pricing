@@ -1,14 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import { PiArrowRightBold } from 'react-icons/pi';
 import { Password, Checkbox, Button, Input, Text } from 'rizzui';
 import { Form } from '@ui/form';
-import { routes } from '@/config/routes';
 import { SignUpSchema, signUpSchema } from '@/validators/signup.schema';
 import { User } from '@/data/user'
+import { Usuario,guardarUsuario } from '@/app/services/usuario.service';
+import { routes } from '@/config/routes';
+import { useRouter } from 'next/navigation';
+
+
 
 const initialValues = {
   firstName: '',
@@ -19,24 +23,30 @@ const initialValues = {
   isAgreed: false,
 };
 
-const user: User = {
-  nombre: '',
-  apellido: '', // Este campo es opcional
-  correo: '',
-  password: ''
-};
 
 export default function SignUpForm() {
+  const router = useRouter();
   const [reset, setReset] = useState({});
-  const onSubmit: SubmitHandler<SignUpSchema> = (data) => {
-    user.nombre = data.firstName;
-    user.apellido = data.lastName;
-    user.correo = data.email;
-    user.password = data.password;
-    console.log(user);
-    setReset({ ...initialValues, isAgreed: false });
+  const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
+    try {
+      const usuario: Usuario = { 
+        usuario: data.email,
+        nombre: data.firstName,
+        apellido: data.lastName,
+        password: data.confirmPassword,
+      };
+      const response = await guardarUsuario(usuario);
+      console.log("Usuario guardado:", response);
+      if (response.id_usuario) {
+        router.push(routes.analytics); 
+      }
+    } catch (error) {
+      console.error("Error al guardar el usuario:", error);
+    }
   };
-
+  useEffect(() => {
+    setReset({ ...initialValues, isAgreed: false });
+  }, []);
   return (
     <>
       <Form<SignUpSchema>

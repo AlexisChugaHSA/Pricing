@@ -7,7 +7,9 @@ export interface Comparativa_Crecos {
   id: string;
   nombre: string;
   efectivo: string;
+  porcentaje_efectivo: string
   cuota: string;
+  porcentaje_cuota: string
   plazo: string;
   productos: Product[];
 }
@@ -18,13 +20,14 @@ export interface Product {
   categoria: string;
   imagen: string;
   precio_credito?: string; 
+  porcentaje_credito:string;
   cuotas?: number; 
   precio_contado?: string; 
+  porcentaje_contado:string;
   modelo?: string; 
   marca?: string; 
   caracteristica?: string;
-  price?: string;
-  quantity?: number; 
+  url?:string;
 }
 
 

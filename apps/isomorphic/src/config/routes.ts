@@ -63,7 +63,9 @@ export const routes = {
     dashboard: '/job-board',
     jobFeed: '/job-board/feed',
   },
+    //analytics: (id: string) => `/analytics/${id}`,
   analytics: '/analytics',
+  analytics2: (id: string) => `/analytics/${id}`,
   financial: {
     dashboard: '/financial',
   },

@@ -39,9 +39,9 @@ export default function ProductDetails() {
         </div>
         <div className="col-span-5 @container">
           <ProductDetailsSummery product={product} />
-          <ProductDeliveryOptions />
+          {/*<ProductDeliveryOptions />
           <ProductDetailsDescription />
-          <ProductDetailsReview />
+          <ProductDetailsReview />*/}
         </div>
       </div>
       <ProductDetailsRelatedProducts />

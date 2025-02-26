@@ -9,6 +9,8 @@ import PencilIcon from '@components/icons/pencil';
 import TableAvatar from '@ui/avatar-card';
 import DateCell from '@ui/date-cell';
 import DeletePopover from '@/app/shared/delete-popover';
+import TrendingDownIcon from '@components/icons/trending-down';
+import TrendingUpIcon from '@components/icons/trending-up';
 
 function getStatusBadge(status: string) {
   switch (status.toLowerCase()) {
@@ -56,7 +58,7 @@ export const getColumnsCCrecos = ({
   onHeaderCellClick,
 }: Columns) => [
   {
-    title: <HeaderCell title="Imagen" />,
+    title: <span className="text-base font-bold text-gray-800">Imagen</span>,
     dataIndex: 'imagen',
     key: 'imagen',
     width: 10,
@@ -67,17 +69,17 @@ export const getColumnsCCrecos = ({
   },
 
   {
-    title: <HeaderCell title="Marca-Modelo" />,
+    title: <span className="text-base font-bold text-gray-800" style={{width:"125px"}}>Marca-Modelo</span>,
     dataIndex: 'customer',
     key: 'customer',
-    width: 10,
+    width: 125,
     className: 'flex-column',
     render: (_: any, row: any) => (
         row.marca+' '+row.modelo
     ),
   },
   {
-    title: (
+    title: <span className="text-base font-bold text-gray-800"> 
       <HeaderCell
         title="Efectivo"
         sortable
@@ -85,17 +87,30 @@ export const getColumnsCCrecos = ({
           sortConfig?.direction === 'asc' && sortConfig?.key === 'total_efectivo'
         }
       />
-    ),
+    </span>,
     onHeaderCell: () => onHeaderCellClick('total_efectivo'),
     dataIndex: 'total_efectivo',
     key: 'total_efectivo',
     width: 10,
-    render: (value: string) => (
-      <Text className="font-medium text-gray-700">${value}</Text>
-    ),
+    render: (_: any, record: { total_efectivo: string; p_total_efectivo: string }) => {
+      const isNegative = record.p_total_efectivo.includes('-');
+      return (
+        <Text className="font-medium text-gray-700 flex items-center gap-1">
+          {record.total_efectivo}
+          <span className={`flex items-center gap-1 text-sm ${isNegative ? 'text-green-600' : 'text-red-600'}`}>
+           ( {isNegative ? (
+              <TrendingDownIcon className="h-auto w-4" />
+            ) : (
+              <TrendingUpIcon className="h-auto w-4" />
+            )}
+            {record.p_total_efectivo}%)
+          </span>
+        </Text>
+      );
+    },
   },
   {
-    title: (
+    title:  <span className="text-base font-bold text-gray-800"> 
       <HeaderCell
         title="Cuota"
         sortable
@@ -103,17 +118,30 @@ export const getColumnsCCrecos = ({
           sortConfig?.direction === 'asc' && sortConfig?.key === 'total_cuota'
         }
       />
-    ),
+    </span>,
     onHeaderCell: () => onHeaderCellClick('total_cuota'),
     dataIndex: 'total_cuota',
     key: 'total_cuota',
     width: 10,
-    render: (value: string) => (
-      <Text className="font-medium text-gray-700">${value}</Text>
-    ),
+    render: (_: any, record: { total_efectivo: string; p_total_cuota: string }) => {
+      const isNegative = record.p_total_cuota.includes('-');
+      return (
+        <Text className="font-medium text-gray-700 flex items-center gap-1">
+          {record.total_efectivo}
+          <span className={`flex items-center gap-1 text-sm ${isNegative ? 'text-green-600' : 'text-red-600'}`}>
+           ( {isNegative ? (
+              <TrendingDownIcon className="h-auto w-4" />
+            ) : (
+              <TrendingUpIcon className="h-auto w-4" />
+            )}
+            {record.p_total_cuota}%)
+          </span>
+        </Text>
+      );
+    },
   },
   {
-    title: (
+    title: <span className="text-base font-bold text-gray-800"> 
       <HeaderCell
         title="Plazo"
         sortable
@@ -121,7 +149,7 @@ export const getColumnsCCrecos = ({
           sortConfig?.direction === 'asc' && sortConfig?.key === 'total_plazo'
         }
       />
-    ),
+    </span>,
     onHeaderCell: () => onHeaderCellClick('total_plazo'),
     dataIndex: 'total_plazo',
     key: 'total_plazo',
