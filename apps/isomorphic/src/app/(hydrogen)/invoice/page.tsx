@@ -34,7 +34,7 @@ const pageHeader = {
 
 export default function InvoiceListPage() {
   const [facturas, setFacturas] = useState<Factura[]>([]); // Estado para almacenar las facturas.
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM5ODA4MjA3LCJqdGkiOiJkNzQxOGM0NC1mMjc3LTQwMTAtODNmZi1kMTZjMTM2YzEzMzUiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM5ODA4MjA3LCJjc3JmIjoiODI1YjEzMDYtMmQxZS00Y2Y2LTk5NTctZGU4MmNlNDVkMjYzIiwiZXhwIjoxNzM5ODQ0MjA3LCJpc19hZG1pbiI6ZmFsc2V9.y2H8ktiTPiP0M5vLVdmxLNWRBgCxJnArCaTK0TjGT_4';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzQwNjgwMjE0LCJqdGkiOiIxZmVjYWFjMC02NzZjLTQ5MzYtOTM2OC1iOTMwMTY5ZGU5MTAiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzQwNjgwMjE0LCJjc3JmIjoiZDNlZjg1MTktODI5Zi00ODkxLWJiOWMtYTQ0MTJhMWI2MjcxIiwiZXhwIjoxNzQwNzE2MjE0LCJpc19hZG1pbiI6ZmFsc2V9.7-wDr2DN0hMT1ixex4fXKwDnoZZjEQAcbHeqFjKXnu0';
 
   useEffect(() => {
     obtenerFacturas(45,token ) // Usa el ID que corresponda.
@@ -55,12 +55,13 @@ export default function InvoiceListPage() {
             fileName="invoice_data"
             header="ID,Name,Username,Avatar,Email,Due Date,Amount,Status,Created At"
           />
+          {/*
           <Link href={routes.invoice.create} className="w-full @lg:w-auto">
             <Button as="span" className="w-full @lg:w-auto">
               <PiPlusBold className="me-1.5 h-[17px] w-[17px]" />
               Add Invoice
             </Button>
-          </Link>
+          </Link>*/}
         </div>
       </PageHeader>
 

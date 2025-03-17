@@ -98,6 +98,7 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
           current: currentPage,
           onChange: (page: number) => handlePaginate(page),
         }}
+         /*
         filterOptions={{
           searchTerm,
           onSearchClear: () => {
@@ -111,14 +112,15 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
           checkedColumns,
           setCheckedColumns,
         }}
+     
         filterElement={
           <FilterElement
             isFiltered={isFiltered}
             filters={filters}
             updateFilter={updateFilter}
-            handleReset={handleReset}
-          />
-        }
+            handleReset={handleReset}*/
+          
+        
         tableFooter={
           <TableFooter
             checkedItems={selectedRowKeys}

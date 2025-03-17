@@ -83,13 +83,14 @@ export default function OrderProducts({
                 <div className="text-gray-500">
                   {toCurrency(item.price)} x {item.quantity}
                 </div>
+                {/* 
                 {showControls && (
                   <QuantityControl
                     product={item}
                     addItemToCart={addItemToCart}
                     removeItemFromCart={removeItemFromCart}
                   />
-                )}
+                )}*/}
               </div>
             </div>
             <div className="flex items-center gap-3 font-medium text-gray-700">
@@ -121,7 +122,7 @@ function QuantityControl({
         <PiMinus className="h-3 w-3" />
       </button>
       <span className="grid w-8 place-content-center">{product.quantity}</span>
-      <button
+    <button
         title="Decrement"
         className="grid h-5 w-5 place-content-center rounded bg-gray-100"
         onClick={() => addItemToCart(product, 1)}

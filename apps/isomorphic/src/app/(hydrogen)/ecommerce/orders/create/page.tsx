@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 const pageHeader = {
-  title: 'Order',
+  title: 'Resumen de su compra',
   breadcrumb: [
     {
       href: routes.eCommerce.dashboard,
@@ -29,11 +29,6 @@ export default function CreateOrderPage() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <ImportButton
-          title="Upload Order"
-          modalBtnLabel="Import Order"
-          className="mt-4 w-full @lg:mt-0 @lg:w-auto"
-        />
       </PageHeader>
       <CreateOrder />
     </>

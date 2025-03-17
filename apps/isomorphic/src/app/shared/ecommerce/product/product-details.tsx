@@ -10,27 +10,32 @@ import ProductDetailsReview from '@/app/shared/ecommerce/product/product-details
 import { modernProductsGrid } from '@/data/shop-products';
 import { generateSlug } from '@utils/generate-slug';
 import { obtenerProductos, Producto } from '@/app/services/producto.service';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+
 
 export default function ProductDetails() {
   const [products, setProducts] = useState<Producto[]>([]);
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const data = await obtenerProductos();
-        setProducts(data);
-      } catch (error) {
-        console.error('Error al cargar los productos:', error);
-      }
-    };
-    loadProducts();
-  }, []);
+    useEffect(() => {
+      const loadProducts = async () => {
+        try {
+          const data = await obtenerProductos();
+          setProducts(data);
+        } catch (error) {
+          console.error('Error al cargar los productos:', error);
+        }
+      };
+      loadProducts();
+    }, []);
   const params = useParams();
-  const product =
-    products.find(
-      (item) => generateSlug(item.nombre) === params.slug
-    ) ?? products[0];
+  const product = useMemo(() => {
+    
+    return (
+      products.find((item) =>item.nombre === params.slug) ?? products[0]
+    );
+  }, [products, params.slug]);
 
+    if(product){
   return (
     <div className="@container">
       <div className="@3xl:grid @3xl:grid-cols-12">
@@ -44,7 +49,8 @@ export default function ProductDetails() {
           <ProductDetailsReview />*/}
         </div>
       </div>
-      <ProductDetailsRelatedProducts />
+       <ProductDetailsRelatedProducts product={product}/>
     </div>
   );
 }
+return null;}

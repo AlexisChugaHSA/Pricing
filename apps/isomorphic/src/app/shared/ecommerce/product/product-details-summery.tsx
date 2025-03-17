@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import isEmpty from 'lodash/isEmpty';
 import { PiShoppingCartSimple } from 'react-icons/pi';
@@ -19,26 +19,30 @@ import {
   productDetailsSchema,
 } from '@/validators/product-details.schema';
 import { generateCartProduct } from '@/store/quick-cart/generate-cart-product';
+import { Producto } from '@/app/services/producto.service';
 
 export default function ProductDetailsSummery({
   product,
 }: {
-  product: Product;
+  product: Producto;
 }) {
-  const { addItemToCart } = useCart();
+  const clicked = useRef(false);
+  const { addItemToCart, isInCart   } = useCart();
   const [isLoading, setLoading] = useState(false);
+  const isProductInCart = isInCart(product.id_producto);
 
   const methods = useForm<ProductDetailsInput>({
-    mode: 'onChange',
-    // defaultValues: defaultValues(order),
+    mode: 'onBlur',
+    defaultValues: product,
     resolver: zodResolver(productDetailsSchema),
   });
 
-  const onSubmit: SubmitHandler<ProductDetailsInput> = (data) => {
+
+  const onSubmit: SubmitHandler<ProductDetailsInput> = async (data) => {
+    if (isProductInCart) return;  
+    clicked.current = true;
     const item = generateCartProduct({
-      ...product,
-      color: data.productColor,
-      size: data.productSize,
+      ...product
     });
 
     setLoading(true);
@@ -46,12 +50,13 @@ export default function ProductDetailsSummery({
       setLoading(false);
       console.log('createOrder data ->', data);
       addItemToCart(item, 1);
-      toast.success(<Text as="b">Product added to the cart</Text>);
+      toast.success(<Text as="b">El producto se ha agregado al carrito</Text>);
+      clicked.current = false;
     }, 600);
+
   };
 
-  // console.log('errors', methods.formState.errors?.productColor);
-
+if(product){
   return (
     <>
       <div className="border-b border-muted pb-6 @lg:pb-8">
@@ -104,10 +109,11 @@ export default function ProductDetailsSummery({
               size="xl"
               type="submit"
               isLoading={isLoading}
+              disabled={isLoading || isProductInCart} 
               className="h-12 text-sm lg:h-14 lg:text-base"
             >
               <PiShoppingCartSimple className="me-2 h-5 w-5 lg:h-[22px] lg:w-[22px]" />{' '}
-              Añadir al carrito
+              {isProductInCart ? 'Ya en el carrito' : 'Añadir al carrito'}
             </Button>
              {/*
             <WishlistButton />*/}
@@ -115,5 +121,5 @@ export default function ProductDetailsSummery({
         </form>
       </FormProvider>
     </>
-  );
+  )}
 }

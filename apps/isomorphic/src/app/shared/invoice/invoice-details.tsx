@@ -10,45 +10,7 @@ import { DetFactura, Factura, obtenerDetFactbyId, obtenerFactbyId } from '@/app/
 import { useEffect, useState } from 'react';
 import { obtenerProductos, Producto } from '@/app/services/producto.service';
 import { obtenerPagobyId, Pago } from '@/app/services/pago.service';
-
-
-
-
-const invoiceItems = [
-  {
-    id: '1',
-    product: {
-      title: 'ChawkBazarTest Laravel Flutter Mobile App',
-      description:
-        'Along With Wordpress Themes & Plugins, We always try to use latest trending techs like React, Next Js, Gatsby Js, GraphQl, Shopify etc to make our products special.',
-    },
-    quantity: 2,
-    unitPrice: 100,
-    total: 200,
-  },
-  {
-    id: '2',
-    product: {
-      title: 'Borobazar React Next Grocery Template',
-      description:
-        'Our rich tech choice will help you to build high performance applications. We are also known to provide great customer supports to our customers.',
-    },
-    quantity: 2,
-    unitPrice: 100,
-    total: 200,
-  },
-  {
-    id: '3',
-    product: {
-      title: 'Superprops React Modern Landing Page Template',
-      description:
-        'Our rich tech choice will help you to build high performance applications. We are also known to provide great customer supports to our customers.',
-    },
-    quantity: 3,
-    unitPrice: 100,
-    total: 300,
-  },
-];
+import IconImage from '@public/icon.png'
 
 
 const columns = [
@@ -83,7 +45,7 @@ const columns = [
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }).replace('$', '').replace('.', ',');
-      
+
       return <Text className="font-medium">{`$${formattedValue} USD`}</Text>;
     }
   },
@@ -106,7 +68,7 @@ const columns = [
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
       }).replace('$', '').replace('.', ',');
-      
+
       return <Text className="font-medium">{`$${formattedValue} USD`}</Text>;
     }
   },
@@ -133,7 +95,7 @@ export default function InvoiceDetails() {
   const [pago, setPago] = useState<Pago | null>(null);
   const [productos, setProductos] = useState<Producto[]>([]);
   const [productosFiltrados, setProductosFiltrados] = useState<Producto[]>([]);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM5ODA4MjA3LCJqdGkiOiJkNzQxOGM0NC1mMjc3LTQwMTAtODNmZi1kMTZjMTM2YzEzMzUiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM5ODA4MjA3LCJjc3JmIjoiODI1YjEzMDYtMmQxZS00Y2Y2LTk5NTctZGU4MmNlNDVkMjYzIiwiZXhwIjoxNzM5ODQ0MjA3LCJpc19hZG1pbiI6ZmFsc2V9.y2H8ktiTPiP0M5vLVdmxLNWRBgCxJnArCaTK0TjGT_4';
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzQwNjgwMjE0LCJqdGkiOiIxZmVjYWFjMC02NzZjLTQ5MzYtOTM2OC1iOTMwMTY5ZGU5MTAiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzQwNjgwMjE0LCJjc3JmIjoiZDNlZjg1MTktODI5Zi00ODkxLWJiOWMtYTQ0MTJhMWI2MjcxIiwiZXhwIjoxNzQwNzE2MjE0LCJpc19hZG1pbiI6ZmFsc2V9.7-wDr2DN0hMT1ixex4fXKwDnoZZjEQAcbHeqFjKXnu0';
   useEffect(() => {
     obtenerFactbyId(params.id, token)
       .then((data) => {
@@ -219,8 +181,11 @@ export default function InvoiceDetails() {
       <div className="w-full rounded-xl border border-muted p-5 text-sm sm:p-6 lg:p-8 2xl:p-10">
         <div className="mb-12 flex flex-col-reverse items-start justify-between md:mb-16 md:flex-row">
           <Image
-            src={siteConfig.logo}
+            src={
+              IconImage
+            }
             alt={siteConfig.title}
+            style={{"maxWidth":"20vh","maxHeight":"20vh"}}
             className="dark:invert"
             priority
           />
@@ -241,28 +206,28 @@ export default function InvoiceDetails() {
         <div className="mb-12 grid gap-4 xs:grid-cols-2 sm:grid-cols-3 sm:grid-rows-1">
           <div className="">
             <Title as="h6" className="mb-3.5 font-semibold">
-              From
+              Emisor:
             </Title>
             <Text className="mb-1.5 text-sm font-semibold uppercase">
-              {factura?.nombre_empresa}
+              
             </Text>
-            <Text className="mb-1.5">Jerome Bell</Text>
+            <Text className="mb-1.5">High Systems Analyticis</Text>
             <Text className="mb-1.5">
-              4140 Parker Rd. Allentown, <br /> New Mexico 31134
+              Quito, <br /> Ecuador
             </Text>
-            <Text className="mb-4 sm:mb-6 md:mb-8">(302) 555-0107</Text>
+            <Text className="mb-4 sm:mb-6 md:mb-8">+593 990 690 106</Text>
             <div>
-              <Text className="mb-2 text-sm font-semibold">Creation Date</Text>
+              <Text className="mb-2 text-sm font-semibold">Fecha:</Text>
               <Text>Mar 22, 2013</Text>
             </div>
           </div>
 
           <div className="mt-4 xs:mt-0">
             <Title as="h6" className="mb-3.5 font-semibold">
-              Bill To
+              Facturado a:
             </Title>
             <Text className="mb-1.5 text-sm font-semibold uppercase">
-              TRANSPORT LLC
+            {factura?.nombre_empresa}
             </Text>
             <Text className="mb-1.5">Albert Flores</Text>
             <Text className="mb-1.5">
@@ -270,24 +235,25 @@ export default function InvoiceDetails() {
               South Dakota 83475
             </Text>
             <Text className="mb-4 sm:mb-6 md:mb-8">(671) 555-0110</Text>
+            {/* 
             <div>
               <Text className="mb-2 text-sm font-semibold">Due Date</Text>
               <Text>Mar 22, 2013</Text>
-            </div>
+            </div>*/}
           </div>
-
+          {/* 
           <div className="mt-4 flex sm:mt-6 md:mt-0 md:justify-end">
             <QRCodeSVG
               value="https://reactjs.org/"
               className="h-28 w-28 lg:h-32 lg:w-32"
             />
-          </div>
+          </div>*/}
         </div>
 
         <InvoiceDetailsListTable invoiceItems={invoiceItems || []} />
 
-        <div className="flex flex-col-reverse items-start justify-between border-t border-muted pb-4 pt-8 xs:flex-row">
-          <div className="mt-6 max-w-md pe-4 xs:mt-0">
+        <div className="flex flex-col-reverse items-center justify-center border-t border-muted pb-4 pt-8 xs:flex-row">
+          {/*<div className="mt-6 max-w-md pe-4 xs:mt-0">
             <Title
               as="h6"
               className="mb-1 text-xs font-semibold uppercase xs:mb-2 xs:text-sm"
@@ -298,12 +264,12 @@ export default function InvoiceDetails() {
               We appreciate your business. Should you need us to add VAT or extra
               notes let us know!
             </Text>
-          </div>
+          </div>*/}
           <div className=" w-full max-w-sm">
             <Text className="flex items-center justify-between border-b border-muted pb-3.5 lg:pb-5">
               Importe total:{' '}
               <Text as="span" className="font-semibold">
-              {new Intl.NumberFormat('es-CL', {style: 'currency',currency: 'USD',minimumFractionDigits: 2}).format(importe_total).replace('US$', '$')} USD
+                {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(importe_total).replace('US$', '$')} USD
               </Text>
             </Text>
             <Text className="flex items-center justify-between border-b border-muted py-3.5 lg:py-5">
@@ -311,7 +277,7 @@ export default function InvoiceDetails() {
               <Text as="span" className="font-semibold">
                 <Text as="span" className="font-semibold">
                   <Text as="span" className="font-semibold">
-                    {new Intl.NumberFormat('es-CL', {style: 'currency',currency: 'USD',minimumFractionDigits: 2}).format(descuento).replace('US$', '$')} USD
+                    {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(descuento).replace('US$', '$')} USD
                   </Text>
 
                 </Text>
@@ -321,17 +287,17 @@ export default function InvoiceDetails() {
             <Text className="flex items-center justify-between border-b border-muted py-3.5 lg:py-5">
               Subtotal:{' '}
               <Text as="span" className="font-semibold">
-              {new Intl.NumberFormat('es-CL', {style: 'currency',currency: 'USD',minimumFractionDigits: 2}).format(subtotal).replace('US$', '$')} USD
+                {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(subtotal).replace('US$', '$')} USD
               </Text>
             </Text>
             <Text className="flex items-center justify-between border-b border-muted py-3.5 lg:py-5">
               IVA ({`${factura?.iva * 100}%`}):
               <Text as="span" className="font-semibold">
-              {new Intl.NumberFormat('es-CL', {style: 'currency',currency: 'USD',minimumFractionDigits: 2}).format(iva).replace('US$', '$')} USD
+                {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(iva).replace('US$', '$')} USD
               </Text>
             </Text>
             <Text className="flex items-center justify-between pt-4 text-base font-semibold text-gray-900 lg:pt-5">
-              Total: <Text as="span">{new Intl.NumberFormat('es-CL', {style: 'currency',currency: 'USD',minimumFractionDigits: 2}).format(total).replace('US$', '$')} USD</Text>
+              Total: <Text as="span">{new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(total).replace('US$', '$')} USD</Text>
             </Text>
           </div>
         </div>

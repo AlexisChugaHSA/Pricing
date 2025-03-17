@@ -29,6 +29,9 @@ export default function ProductModernCard({
   return (
     <div className={cn(className)}>
       <div className="relative">
+      <Link href={routes.eCommerce.productDetails(
+            String(nombre)
+          )}>
         <div className="relative mx-auto aspect-[4/5.06] w-full overflow-hidden rounded-lg bg-gray-100">
           <Image
             alt={nombre}
@@ -40,7 +43,8 @@ export default function ProductModernCard({
             className="h-full w-full object-cover"
           />
         </div>
-        <WishlistButton className="absolute end-3 top-3" />
+        </Link>
+       {/*  <WishlistButton className="absolute end-3 top-3" />*/}
       </div>
 
       <div className="pt-3">

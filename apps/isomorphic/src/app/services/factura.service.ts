@@ -25,6 +25,10 @@ export interface DetFactura {
   id_factura: number;
   precio: string;
 }
+export interface Iva{
+  id_iva:number;
+  iva_valor:number;
+}
 
 export async function obtenerFacturas(id: number, token: string): Promise<Factura[]> {
   try {
@@ -57,6 +61,20 @@ export async function obtenerFactbyId(id: number, token: string): Promise<Factur
 export async function obtenerDetFactbyId(id: number, token: string): Promise<DetFactura[]> {
   try {
     const response = await axios.get<DetFactura[]>(url+'detalle-facturas-fact/'+id, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener las facturas:', error);
+    throw error;
+  }
+}
+
+export async function obtenerIva( token: string): Promise<Iva> {
+  try {
+    const response = await axios.get<Iva>(url+'iva', {
       headers: {
         Authorization: `Bearer ${token}`
       }

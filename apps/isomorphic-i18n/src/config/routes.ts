@@ -11,6 +11,7 @@ export const routes = {
     orders: '/ecommerce/orders',
     createOrder: '/ecommerce/orders/create',
     orderDetails: (id: string) => `/ecommerce/orders/${id}`,
+    newOrder: '/ecommerce/orders/new',
     editOrder: (id: string) => `/ecommerce/orders/${id}/edit`,
     reviews: '/ecommerce/reviews',
     shop: '/ecommerce/shop',

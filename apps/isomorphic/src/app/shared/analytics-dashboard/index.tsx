@@ -155,7 +155,7 @@ export default function AnalyticsDashboard() {
   const [stateGamas, setStateGamas] = useState<string[]>([]);
   const [stateCaracteristicas, setStateCaracteristicas] = useState<string[]>([]);
   const [stateModelos, setStateModelos] = useState<string[]>([]);
-
+ console.log("holaaa")
   const handleSelectionChangeAños = (selected: string[]) => {
     if (selected.includes('quitar_todas')) {
       setStateAños([]);
@@ -164,6 +164,7 @@ export default function AnalyticsDashboard() {
     }
     console.log("Opciones seleccionadas:", selected);
   };
+
   const handleSelectionChangeMeses = (selected: string[]) => {
     if (selected.includes('quitar_todas')) {
       setStateMeses([]);
@@ -196,6 +197,7 @@ export default function AnalyticsDashboard() {
     }
     console.log("Opciones seleccionadas:", selected);
   };
+
   const handleSelectionChangeCaracteristicas = (selected: string[]) => {
     if (selected.includes('quitar_todas')) {
       setStateCaracteristicas([]);
@@ -222,80 +224,91 @@ export default function AnalyticsDashboard() {
         <StatCards className="grid-cols-1 @xl:grid-cols-2 @4xl:col-span-2 @6xl:grid-cols-3 @7xl:col-span-12" />
       </div> <br />
       <div className="grid grid-cols-1 gap-3 @4xl:grid-cols-8 @7xl:grid-cols-8 3xl:gap-8" style={{ alignItems: "center" }}>
-        <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
+        <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1" key="filtro_años">
           <div className="w-full text-center font-semibold">Año</div>
           <MultiSelect
+          key={`multi-select-años-${stateAños.join(",")}`}
             value={stateAños}
             onChange={handleSelectionChangeAños}
             options={años}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
+
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Mes</div>
           <MultiSelect
+          key={`multi-select-años-${stateMeses.join(",")}`}
             value={stateMeses}
             onChange={handleSelectionChangeMeses}
             options={meses}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Empresa</div>
           <MultiSelect
+           key={`multi-select-años-${stateEmpresas.join(",")}`}
             value={stateEmpresas}
             onChange={handleSelectionChangeEmpresas}
             options={empresas}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Marca</div>
           <MultiSelect
+           key={`multi-select-años-${stateMarcas.join(",")}`}
             value={stateMarcas}
             onChange={handleSelectionChangeMarcas}
             options={marcas}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Gama</div>
           <MultiSelect
+           key={`multi-select-años-${stateGamas.join(",")}`}
             value={stateGamas}
             onChange={handleSelectionChangeGamas}
             options={gamas}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Caracteristica</div>
           <MultiSelect
+           key={`multi-select-años-${stateCaracteristicas.join(",")}`}
             value={stateCaracteristicas}
             onChange={handleSelectionChangeCaracteristicas}
             options={caracteristicas}
+            optionCheckBox={true}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            searchable={true} 
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
         <CajaFiltro className="@4xl:col-span-1 @7xl:col-span-1">
           <div className="w-full text-center font-semibold">Modelo</div>
           <MultiSelect
+           key={`multi-select-años-${stateModelos.join(",")}`}
             value={stateModelos}
             onChange={handleSelectionChangeModelos}
             options={modelos}
             placeholder="Select Platform.."
-            selectClassName="ring-0 min-h-9 h-9 w-full"
+            searchable={true}
+            selectClassName="ring-0 min-h-9 h-9 w-full px-0"
             selectedItemClassName="hidden first:contents border-0"
           />
         </CajaFiltro>
@@ -316,6 +329,7 @@ export default function AnalyticsDashboard() {
       <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-1 @7xl:grid-cols-1 3xl:gap-8">
         <ComparativaTabs className="@4xl:col-span-1 @7xl:col-span-1 " />
       </div>
+      {/* 
       <br />
       <div className="grid grid-cols-1 gap-6 @4xl:grid-cols-2 @7xl:grid-cols-12 3xl:gap-8">
 
@@ -341,7 +355,7 @@ export default function AnalyticsDashboard() {
         <AccountRetention className="@7xl:col-span-12 @[90rem]:col-span-5 @[112rem]:col-span-4" />
 
         <WebsiteMetrics className="@4xl:col-span-2 @7xl:col-span-12" />
-      </div>
+      </div>*/}
     </div>
   );
 }

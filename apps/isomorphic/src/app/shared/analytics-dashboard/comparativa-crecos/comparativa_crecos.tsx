@@ -24,7 +24,6 @@ import WidgetCard from '@components/cards/widget-card';
           });
       }, []);
     const orderData = datos
-    console.log(orderData)
     
     if(orderData && orderData.length > 0){
     return (

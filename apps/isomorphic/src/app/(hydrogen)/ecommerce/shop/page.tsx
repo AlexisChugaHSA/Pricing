@@ -35,7 +35,7 @@ export default function ShopPage() {
   return (
     <>
       <PageHeader title={pageHeader.title} breadcrumb={pageHeader.breadcrumb}>
-        <FiltersButton placement="right" modalView={<ShopFilters />} />
+       {/*  <FiltersButton placement="right" modalView={<ShopFilters />} />*/}
       </PageHeader>
 
       <ProductFeed />
