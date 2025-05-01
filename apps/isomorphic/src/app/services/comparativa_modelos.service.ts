@@ -12,10 +12,10 @@ export interface Comparativa_Modelos {
   total_cuota: string;
   p_total_cuota: string;
   total_plazo: string;
-  empresas: Empresa[];
+  empresas: EmpresaCM[];
 }
 
-export interface Empresa {
+export interface EmpresaCM {
   id: string;
   empresa: string;
   efectivo: string;

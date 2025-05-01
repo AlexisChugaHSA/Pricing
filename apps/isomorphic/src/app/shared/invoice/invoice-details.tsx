@@ -95,7 +95,12 @@ export default function InvoiceDetails() {
   const [pago, setPago] = useState<Pago | null>(null);
   const [productos, setProductos] = useState<Producto[]>([]);
   const [productosFiltrados, setProductosFiltrados] = useState<Producto[]>([]);
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzQwNjgwMjE0LCJqdGkiOiIxZmVjYWFjMC02NzZjLTQ5MzYtOTM2OC1iOTMwMTY5ZGU5MTAiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzQwNjgwMjE0LCJjc3JmIjoiZDNlZjg1MTktODI5Zi00ODkxLWJiOWMtYTQ0MTJhMWI2MjcxIiwiZXhwIjoxNzQwNzE2MjE0LCJpc19hZG1pbiI6ZmFsc2V9.7-wDr2DN0hMT1ixex4fXKwDnoZZjEQAcbHeqFjKXnu0';
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No hay token disponible');
+    return;
+  }
+
   useEffect(() => {
     obtenerFactbyId(params.id, token)
       .then((data) => {
@@ -147,7 +152,7 @@ export default function InvoiceDetails() {
   // Filtrar productos según detFacturas
   useEffect(() => {
     if (detFacturas.length > 0 && productos.length > 0) {
-      const idsProductos = detFacturas.map((det) => det.id_producto.toString());
+      const idsProductos = detFacturas.map((det) => det.id_producto?.toString());
       const productosRelacionados = productos.filter((producto) =>
         idsProductos.includes(producto.id_producto.toString())
       );
@@ -199,7 +204,7 @@ export default function InvoiceDetails() {
               Pagado
             </Badge>
             <Title as="h6">INV - #{factura?.id_factura}</Title>
-            <Text className="mt-0.5 text-gray-500">Número de Fectura</Text>
+            <Text className="mt-0.5 text-gray-500">Número de Factura</Text>
           </div>
         </div>
 

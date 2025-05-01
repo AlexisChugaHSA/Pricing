@@ -13,6 +13,11 @@ export interface Usuario {
   token?:string
 }
 
+export interface UsuarioLogin{
+  id_usuario?: number;
+  token?:string
+}
+
 export async function guardarUsuario(usuario: Usuario): Promise<{ id_usuario: number }> {
   try {
     const response = await axios.post(url + 'guardar-usuario', usuario, {
@@ -88,6 +93,21 @@ export async function comprobarUsuario(usuario: string): Promise<boolean> {
     return response.data; // Devuelve true si existe, false si no.
   } catch (error) {
     console.error('Error al comprobar el usuario:', error);
+    throw error;
+  }
+}
+
+export async function loginUsuarioSi(usuario: Usuario): Promise<UsuarioLogin> {
+  try {
+    const response = await axios.post(`${url}login/si`, usuario, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    localStorage.setItem('token',response.data.token)
+    return response.data;
+  } catch (error) {
+    console.error('Error en el login:', error);
     throw error;
   }
 }

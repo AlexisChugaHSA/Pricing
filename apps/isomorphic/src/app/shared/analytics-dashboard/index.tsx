@@ -23,6 +23,7 @@ import { renderCustomSocialMultiOption, renderDisplayValue } from '../social-med
 import { useEffect, useState } from 'react';
 import { Producto, obtenerProductobyId } from '@/app/services/producto.service';
 import { useParams } from 'next/navigation';
+import { loginUsuarioSi, Usuario, UsuarioLogin } from '@/app/services/usuario.service';
 import Meses, {
   Filtro,
   obtenerAñosFiltro,
@@ -84,6 +85,25 @@ const FiltrosComponent = () => {
 
 
 export default function AnalyticsDashboard() {
+  const [usuario, setUsuario] = useState<UsuarioLogin | null>(null);
+
+  const user = {
+    usuario: 'alexischuga12345@gmail.com', // Asegúrate de usar la propiedad correcta (no "usuario")
+    password: 'y0SW5mER'
+  };
+
+  useEffect(() => {
+    loginUsuarioSi(user)
+      .then((data) => {
+        setUsuario(data); 
+        console.log('Token VVV:', localStorage.getItem('token'));
+      })
+      .catch((error) => {
+        console.error('Error al hacer login:', error);
+      });
+  }, []);
+
+
   const id = "8";
   const [producto, setProducto] = useState<Producto | null>(null);
   useEffect(() => {
@@ -155,7 +175,7 @@ export default function AnalyticsDashboard() {
   const [stateGamas, setStateGamas] = useState<string[]>([]);
   const [stateCaracteristicas, setStateCaracteristicas] = useState<string[]>([]);
   const [stateModelos, setStateModelos] = useState<string[]>([]);
- console.log("holaaa")
+
   const handleSelectionChangeAños = (selected: string[]) => {
     if (selected.includes('quitar_todas')) {
       setStateAños([]);

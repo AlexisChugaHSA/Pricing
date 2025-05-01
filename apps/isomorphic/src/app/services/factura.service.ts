@@ -4,7 +4,8 @@ import { GLOBAL } from './global.service';
 export const url=GLOBAL.url
 
 export interface Factura {
-  id_factura: number;
+  id_factura?: number;
+  id_metodo_pago?:number; //aumentar esto
   id_empresa: number;
   total: number;
   subtotal: number;
@@ -15,19 +16,52 @@ export interface Factura {
   nombre_empresa: string;
   telefono_empresa: string;
   correo_empresa: string;
+  direccion_empresa?:string; //aumentar esto
   id_usuario: number;
+  sri:string;
 }
 
 export interface DetFactura {
-  id_detalle_factura: number;
+  id_detalle_factura?: number;
   id_pago: number;
-  id_producto: number;
+  id_producto?: number;
   id_factura: number;
-  precio: string;
+  precio?: number;
 }
 export interface Iva{
   id_iva:number;
   iva_valor:number;
+}
+
+
+export async function guardarFactura(factura: Factura, token: string): Promise<Factura> {
+  try {
+    const response = await axios.post<Factura>(url + 'facturacion', factura, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al guardar la factura:', error);
+    throw error;
+  }
+}
+
+export async function guardarDetalleFactura(detalle: DetFactura, token: string): Promise<DetFactura> {
+  try {
+    const response = await axios.post<DetFactura>(url + 'detalle-factura', detalle, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al guardar el detalle de factura:', error);
+    throw error;
+  }
 }
 
 export async function obtenerFacturas(id: number, token: string): Promise<Factura[]> {

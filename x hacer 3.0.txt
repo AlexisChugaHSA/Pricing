@@ -19,8 +19,11 @@
 19. Arreglar la selección de la casilla de los filtros (no se selecciona en la casilla pero si en el nombre) XXXXXX
 20. Crear servicio de membresias XXXX
 21 Crear cards de membresias XXXXX
-22. crear el formulario para llenar datos de empresa a quien se hace la factura
-23. Servicio para guardar datos de carrito en la factura de Paypal
+22. crear el formulario para llenar datos de empresa a quien se hace la factura XXXX
+23. Servicio para guardar datos de carrito en la factura de Paypal XXXXX
 24. 
 
-
+Preguntar: 
+*Poner direccion en la factura?
+* Que va en el iva_0?
+* valores quemados de pago? cancelado, intentos,....

@@ -10,8 +10,8 @@ type MessageProps = {
     return <p>{content}</p>;
   }
   
-function PayPalButtonComponent() {
-    const [total, setTotal] = useState(10.00); 
+function PayPalButtonComponent({iva,paypalItems,subtotal,onPaymentApproved }:any) {
+    
     const initialOptions = {
         clientId:
             "AYLqvj3pfMRED1JHhtL2p1TvTMT_m_jvqTF_VvwtZ-nE8aCfzVdRDLxNs_eR9scSx9ZzKtnlButvv3nw",
@@ -26,6 +26,11 @@ function PayPalButtonComponent() {
     };
 
     const [message, setMessage] = useState("");
+    const total=(subtotal * (1+parseFloat(iva))).toFixed(2);
+    const impuesto=(subtotal * parseFloat(iva)).toFixed(2);
+    const subtotalF=subtotal.toFixed(2);
+ 
+
 
     return (
         <div className="App">
@@ -43,18 +48,19 @@ function PayPalButtonComponent() {
                             purchase_units: [{
                                 amount: {
                                     currency_code: "USD",
-                                    value: total.toFixed(2),
+                                    value: total,
                                     breakdown: {
                                         item_total: {
                                             currency_code: "USD",
-                                            value: (total * 0.9).toFixed(2) // Subtotal sin impuestos
+                                            value: subtotalF
                                         },
                                         tax_total: {
                                             currency_code: "USD",
-                                            value: (total * 0.1).toFixed(2) // Impuestos (10%)
+                                            value: impuesto
                                         }
                                     }
-                                }
+                                },
+                                items:paypalItems
                             }]
                         });
                     }}
@@ -62,19 +68,15 @@ function PayPalButtonComponent() {
                         try {
                             if(actions.order){
                             const order = await actions.order.capture();
-                            console.log("Pago exitoso:", order);
+                            const payerName = order.payer?.name?.given_name + ' ' + order.payer?.name?.surname;
                             setMessage(`Pago aprobado: ${order.id}`);
-                            // Cierra la ventana de PayPal
-                            actions.redirect("http://localhost:3000/ecommerce/orders/FC6723757651DB74");}
+                            onPaymentApproved(order.id,payerName); 
+                            }
                         } catch (error) {
                             console.error("Error en el pago:", error);
                             setMessage(`Error en la transacción: ${error}`);
                         }
-                    }}
-                    
-                    
-                    
-                    
+                    }} 
                     onCancel={() => {
                         console.log("Pago cancelado");
                     }}

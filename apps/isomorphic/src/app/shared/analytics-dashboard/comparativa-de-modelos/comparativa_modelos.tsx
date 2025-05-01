@@ -11,8 +11,12 @@ import WidgetCard from '@components/cards/widget-card';
 
   export default function ComparativaModelos() {
          const [datos, setDatos] = useState<Comparativa_Modelos[]>([]); 
-          const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
           useEffect(() => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+              console.error('No hay token disponible');
+              return;
+            }          
             obtenerDatos(token ) 
               .then((data) => {
                 setDatos(data); 

@@ -34,9 +34,13 @@ const pageHeader = {
 
 export default function InvoiceListPage() {
   const [facturas, setFacturas] = useState<Factura[]>([]); // Estado para almacenar las facturas.
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzQwNjgwMjE0LCJqdGkiOiIxZmVjYWFjMC02NzZjLTQ5MzYtOTM2OC1iOTMwMTY5ZGU5MTAiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzQwNjgwMjE0LCJjc3JmIjoiZDNlZjg1MTktODI5Zi00ODkxLWJiOWMtYTQ0MTJhMWI2MjcxIiwiZXhwIjoxNzQwNzE2MjE0LCJpc19hZG1pbiI6ZmFsc2V9.7-wDr2DN0hMT1ixex4fXKwDnoZZjEQAcbHeqFjKXnu0';
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No hay token disponible');
+      return;
+    }  
     obtenerFacturas(45,token ) // Usa el ID que corresponda.
       .then((data) => {
         setFacturas(data); // Guarda los datos en el estado.

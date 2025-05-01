@@ -11,9 +11,14 @@ export default function ExpandedOrderRowCCrecos({ record }: any) {
   const [datosPCredito, setDatosPCredito] = useState<Evolutivo_Precio_Credito[]>([]);
   const [datosPContado, setDatosPContado] = useState<Evolutivo_Precio_Contado[]>([]);
 
-  const token = 'TU_TOKEN_AQUI';
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No hay token disponible');
+      return;
+    }
+  
     obtenerDatosPCredito(token, "01").then((data) => setDatosPCredito(data));
     obtenerDatosPContado(token, "02").then((data) => setDatosPContado(data));
   }, []);

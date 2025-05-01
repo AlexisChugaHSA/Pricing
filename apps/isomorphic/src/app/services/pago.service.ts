@@ -4,8 +4,8 @@ import { GLOBAL } from './global.service';
 export const url=GLOBAL.url
 
 export interface Pago {
-  id_pago: number;
-  id_empresa: number;
+  id_pago?: number;
+  id_empresa?: number;
   valor: number;
   descuento: number;
   periodo: number;
@@ -17,7 +17,20 @@ export interface Pago {
   fecha_hasta: string;
 }
 
-
+export async function guardarPago(pago: Pago, token: string): Promise<Pago> {
+  try {
+    const response = await axios.post<Pago>(url + 'pago', pago, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al guardar el pago:', error);
+    throw error;
+  }
+}
 
 export async function obtenerPagobyId(id: number, token: string): Promise<Pago> {
   try {

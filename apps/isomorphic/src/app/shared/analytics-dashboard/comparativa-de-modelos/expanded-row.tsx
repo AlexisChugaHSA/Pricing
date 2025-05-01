@@ -11,9 +11,11 @@ import { Evolutivo_Precio_Contado, Evolutivo_Precio_Credito, obtenerDatosCuota, 
 export default function ExpandedOrderRowCModelos({ record }: any) {
   const [datosPCredito, setDatosPCredito] = useState<Evolutivo_Precio_Credito[]>([]);
   const [datosPContado, setDatosPContado] = useState<Evolutivo_Precio_Contado[]>([]);
-
-  const token = 'TU_TOKEN_AQUI';
-
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No hay token disponible');
+    return;
+  }
   useEffect(() => {
     obtenerDatosCuota(token, "01").then((data) => setDatosPCredito(data));
     obtenerDatosEfectivo(token, "02").then((data) => setDatosPContado(data));

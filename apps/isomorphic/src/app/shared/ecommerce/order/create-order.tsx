@@ -78,8 +78,9 @@ export default function OrderView() {
     amount: total,
   });
   if (total === undefined) {
-    return <div>Cargando...</div>; // Puedes mostrar un mensaje de carga mientras no esté disponible
+    return <div>Cargando...</div>; 
   }
+
   return (
     <div className="@container">
       <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">

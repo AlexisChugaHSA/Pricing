@@ -49,28 +49,18 @@ const barColors = [
   '#4ade80', '#d97706', '#eab308', '#8b5cf6', '#ef4444'
 ];
 const viewOptions = [{ value: "0", label: "Todos" },...Meses];
-/*function handleChange(viewType: string) {
-  const [datos, setDatos] = useState<Evolutivo_Efectivo_Mes[]>([]); 
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
-    useEffect(() => {
-      obtenerDatosPorMes(token,'01') 
-        .then((data) => {
-          setDatos(data); 
-        })
-        .catch((error) => {
-          console.error('Error al obtener las facturas:', error);
-        });
-    }, []);
-  const data = datos
-  //console.log(data)
-  console.log('viewType', viewType);
-}*/
+
 
 export default function EvolutivoEfectivo({ className }: { className?: string }) {
     const [datos, setDatos] = useState<Evolutivo_Efectivo[]>([]); 
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNzM2MjA1NzM4LCJqdGkiOiI4NjAxMWIzZS1kY2MzLTQ4ODQtYmY4Yy1hMzJjNWNlYzQ4MTMiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjo3NSwibmJmIjoxNzM2MjA1NzM4LCJjc3JmIjoiOTBiZWY5M2UtZmQ2MS00YWY4LWEwYjAtNTI3YWQ2YWMxOGUzIiwiZXhwIjoxNzM2MjQxNzM4LCJpc19hZG1pbiI6ZmFsc2V9.o43hpwrHQbAMUWut89CgEsKlm89dD-F1h8vEdu4hJ_8';
-  
+
     useEffect(() => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No hay token disponible');
+        return;
+      }
+    
       obtenerDatos(token ) // Usa el ID que corresponda.
         .then((data) => {
           setDatos(data); // Guarda los datos en el estado.
@@ -81,6 +71,12 @@ export default function EvolutivoEfectivo({ className }: { className?: string })
     }, []);
     function handleChange(viewType: string) {
       const viewTypeStr = viewType.toString();
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No hay token disponible');
+        return;
+      }
+    
       obtenerDatos(token, viewTypeStr === '0' ? undefined : viewTypeStr)
         .then((data) => {
           setDatos(data);

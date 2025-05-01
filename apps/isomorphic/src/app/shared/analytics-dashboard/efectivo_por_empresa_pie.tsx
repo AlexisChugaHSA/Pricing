@@ -41,9 +41,14 @@ const renderActiveShape = (props: any) => {
 export default function Efectivo_Empresa_Pie({ className }: { className?: string }) {
   const [datos, setDatos] = useState<Efectivo_EmpresaPie[]>([]);
   const [activeIndex, setActiveIndex] = useState(1);
-  const token = 'eyJhbGciOiJI...'; 
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No hay token disponible');
+      return;
+    }
+  
     obtenerDatosPie(token)
       .then((data) => setDatos(data))
       .catch((error) => console.error('Error al obtener los datos:', error));

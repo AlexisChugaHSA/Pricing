@@ -23,6 +23,7 @@ const filterState = {
 };
 
 export default function InvoiceTable({ data = [] }: { data: any[] }) {
+  console.log(data)
   if(data.length > 0){
   const [pageSize, setPageSize] = useState(10);
   const onHeaderCellClick = (value: string) => ({
@@ -35,7 +36,6 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
     handleDelete(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(data)
   const {
     isLoading,
     isFiltered,
