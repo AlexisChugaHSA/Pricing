@@ -44,16 +44,16 @@ export default function SignInForm() {
             <Input
               type="email"
               size="lg"
-              label="Email"
-              placeholder="Enter your email"
+              label="Usuario"
+              placeholder="Ingrese su usuario"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register('email')}
               error={errors.email?.message}
             />
             <Password
-              label="Password"
-              placeholder="Enter your password"
+              label="Contraseña"
+              placeholder="Ingrese su contraseña"
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -71,11 +71,11 @@ export default function SignInForm() {
                 href={routes.auth.forgotPassword1}
                 className="h-auto p-0 text-sm font-semibold text-blue underline transition-colors hover:text-gray-900 hover:no-underline"
               >
-                Forget Password?
+                Olvidaste tu contraseña?
               </Link>
             </div>
             <Button className="w-full" type="submit" size="lg">
-              <span>Sign in</span>{' '}
+              <span>Iniciar sesión</span>{' '}
               <PiArrowRightBold className="ms-2 mt-0.5 h-6 w-6" />
             </Button>
           </div>

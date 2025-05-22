@@ -11,6 +11,7 @@ export const signUpSchema = z.object({
   firstName: z.string().min(1, { message: messages.firstNameRequired }),
   lastName: z.string().optional(),
   email: validateEmail,
+  telefono: z.string().min(10, 'Ingrese un número válido'),
   password: validatePassword,
   confirmPassword: validateConfirmPassword,
   isAgreed: z.boolean(),

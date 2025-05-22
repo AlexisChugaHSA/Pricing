@@ -18,9 +18,9 @@ export interface UsuarioLogin{
   token?:string
 }
 
-export async function guardarUsuario(usuario: Usuario): Promise<{ id_usuario: number }> {
+export async function guardarUsuario(usuario: Usuario): Promise<{ id_usuario: number, usuario:string }> {
   try {
-    const response = await axios.post(url + 'guardar-usuario', usuario, {
+    const response = await axios.post(url + 'usuario', usuario, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -43,9 +43,9 @@ export async function consultarUsuarioPorId(id_usuario: number): Promise<Usuario
   }
 }
 
-export async function loginUsuario(correo: string, password: string): Promise<Usuario> {
+export async function loginUsuario(correo: string, password: string): Promise<{ id_usuario: number, usuario:string, token:string}> {
   try {
-    const response = await axios.post(url+'login-prueba', {
+    const response = await axios.post(url+'login', {
       usuario: correo,
       password: password,
     }, {
@@ -53,17 +53,8 @@ export async function loginUsuario(correo: string, password: string): Promise<Us
         'Content-Type': 'application/json',
       },
     });
-    const data: Usuario = {
-      id_usuario: response.data.id_usuario ?? undefined,
-      usuario: response.data.usuario, 
-      password: response.data.password ?? undefined, 
-      nombre: response.data.nombre ?? undefined, 
-      apellido: response.data.apellido ?? undefined, 
-      telefono: response.data.telefono ?? undefined,
-      token: response.data.token, 
-    };
 
-    return data;
+    return response.data;
   } catch (error) {
     console.error('Error al realizar el login:', error);
     throw error;

@@ -2,15 +2,18 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { SubmitHandler } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { PiArrowRightBold } from 'react-icons/pi';
-import { Password, Checkbox, Button, Input, Text } from 'rizzui';
+import { Password, Checkbox, Button, Input, Text, Title } from 'rizzui';
 import { Form } from '@ui/form';
 import { SignUpSchema, signUpSchema } from '@/validators/signup.schema';
 import { User } from '@/data/user'
-import { Usuario,guardarUsuario } from '@/app/services/usuario.service';
+import { Usuario, guardarUsuario } from '@/app/services/usuario.service';
 import { routes } from '@/config/routes';
 import { useRouter } from 'next/navigation';
+import { PhoneNumber } from '@ui/phone-input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Dialog } from '@headlessui/react';
 
 
 
@@ -25,21 +28,33 @@ const initialValues = {
 
 
 export default function SignUpForm() {
+  const [usuario, setUsuario] = useState<Usuario | null>(null);
   const router = useRouter();
   const [reset, setReset] = useState({});
+  const [isOpenEfectivo, setIsOpenEfectivo] = useState(false);
   const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
     try {
-      const usuario: Usuario = { 
+      const nuevo_usuario: Usuario = {
         usuario: data.email,
         nombre: data.firstName,
         apellido: data.lastName,
+        telefono: data.telefono,
         password: data.confirmPassword,
       };
-      const response = await guardarUsuario(usuario);
-      console.log("Usuario guardado:", response);
+      setUsuario(nuevo_usuario);
+      //eliminar esto cuando esté la api
+      const credenciales = {
+        usuario: data.email,
+        password: data.confirmPassword,
+      };
+      //const response = await guardarUsuario(credenciales); //quitar esto cuando este la api
+      // const response = await guardarUsuario(usuario); //agregar esto cuando este la api
+      console.log(usuario)
+      //console.log("Usuario guardado:", response);
+      /*
       if (response.id_usuario) {
         router.push(routes.analytics); 
-      }
+      }*/
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
     }
@@ -47,6 +62,7 @@ export default function SignUpForm() {
   useEffect(() => {
     setReset({ ...initialValues, isAgreed: false });
   }, []);
+
   return (
     <>
       <Form<SignUpSchema>
@@ -57,7 +73,7 @@ export default function SignUpForm() {
           defaultValues: initialValues,
         }}
       >
-        {({ register, formState: { errors } }) => (
+        {({ register, control, formState: { errors } }) => (
           <div className="flex flex-col gap-x-4 gap-y-5 md:grid md:grid-cols-2 lg:gap-5">
             <Input
               type="text"
@@ -89,6 +105,21 @@ export default function SignUpForm() {
               {...register('email')}
               error={errors.email?.message}
             />
+            <Controller
+              control={control}
+              name="telefono"
+              render={({ field }) => (
+                <PhoneNumber
+                  label="Teléfono"
+                  size='lg'
+                  country="ec"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.telefono?.message}
+                  className='col-span-2'
+                />
+              )}
+            />
             <Password
               label="Contraseña"
               placeholder="Ingresa una contraseña"
@@ -115,14 +146,14 @@ export default function SignUpForm() {
                   <>
                     Al registrarte has aceptado nuestros{' '}
                     <Link
-                      href="/"
+                      href={routes.terms_conditions}
                       className="font-medium text-blue transition-colors hover:underline"
                     >
                       Términos
                     </Link>{' '}
                     y {' '}
                     <Link
-                      href="/"
+                      href={routes.privacy_policy}
                       className="font-medium text-blue transition-colors hover:underline"
                     >
                       Políticas de Privacidad
@@ -139,7 +170,7 @@ export default function SignUpForm() {
         )}
       </Form>
       <Text className="mt-6 text-center leading-loose text-gray-500 lg:mt-8 lg:text-start">
-      ¿Ya tienes una cuenta?{' '}
+        ¿Ya tienes una cuenta?{' '}
         <Link
           href={routes.auth.signIn1}
           className="font-semibold text-gray-700 transition-colors hover:text-blue"
@@ -147,6 +178,33 @@ export default function SignUpForm() {
           Inicia sesión
         </Link>
       </Text>
+      <Button size="sm" className="w-full" onClick={() => setIsOpenEfectivo(true)}>
+        Evolutivo
+      </Button>
+      <Dialog open={isOpenEfectivo} onClose={setIsOpenEfectivo} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg" style={{'justifyItems':'center'}}>
+            <Title
+              as="h1"
+              className="text-center text-[22px] font-bold leading-normal text-gray-1000 lg:text-3xl"
+            >
+              Hola {usuario?.nombre} {usuario?.apellido}
+            </Title>
+            <br />
+            <p className='text-center'>
+            Muchas gracias por registrarte en nuestra plataforma de analítica.
+            </p>
+            <br />
+            <button
+              onClick={() => setIsOpenEfectivo(false)}
+              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded text-center"
+            >
+              Iniciar sesión
+            </button>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </>
   );
 }
