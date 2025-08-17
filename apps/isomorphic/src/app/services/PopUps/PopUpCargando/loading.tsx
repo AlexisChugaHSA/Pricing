@@ -17,7 +17,7 @@ const LoadingOverlay: React.FC<LoadingOverlayProps> = ({ show }) => {
       <div className="bg-white p-1 rounded-xl shadow-xl flex flex-col items-center gap-1">
         <div className="relative w-20 h-20">
           <Image
-            src="/ajax-loader.gif" // desde public/
+            src="/ajax-loader.gif" 
             alt="Cargando"
             fill
             priority

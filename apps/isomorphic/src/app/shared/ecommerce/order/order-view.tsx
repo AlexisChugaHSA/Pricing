@@ -30,7 +30,7 @@ import { Empresa, comprobarEmpresa, guardarEmpresa } from '@/app/services/empres
 import { Factura, DetFactura,guardarDetalleFactura } from '@/app/services/factura.service';
 import { guardarPago, Pago } from '@/app/services/pago.service';
 import { guardarMetodoPago, MetodoPago } from '@/app/services/metodo_pago.service';
-import { ProductoUsuario,guardarProductoUsuario } from '@/app/services/producto_usuario.service copy';
+import { ProductoUsuario,guardarProductoUsuario } from '@/app/services/producto_usuario';
 
 
 const orderStatus = [

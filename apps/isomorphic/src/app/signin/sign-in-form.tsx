@@ -13,6 +13,7 @@ import { User } from '@/data/user';
 import { Usuario, loginUsuario } from '../services/usuario.service';
 import { useRouter } from 'next/navigation';
 import LoadingOverlay from '../services/PopUps/PopUpCargando/loading';
+import PopUpErrorPago from '../services/PopUps/PopUpErrorPago/error_pago';
 
 const initialValues: LoginSchema = {
   email: 'admin@admin.com',
@@ -30,6 +31,7 @@ export default function SignInForm() {
   const [alertOpenNOEN, setAlertOpenNOEN] = useState(false);
   const [alertOpenTK, setAlertOpenTK] = useState(false);
   const [cargando, setCargando] = useState(false);
+  
   const simularCarga = () => {
     setCargando(true);
     setTimeout(() => {
@@ -81,6 +83,7 @@ export default function SignInForm() {
   return (
     <>
       <div className="relative">
+        <PopUpErrorPago/>
         <LoadingOverlay show={cargando} />
         <div className={cargando ? 'pointer-events-none opacity-50' : ''}>
           <h1 className="text-2xl font-bold mb-4">Mi App</h1>

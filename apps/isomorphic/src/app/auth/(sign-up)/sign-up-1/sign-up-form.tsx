@@ -91,6 +91,8 @@ export default function SignUpForm() {
         onSubmit={onSubmit}
         useFormProps={{
           defaultValues: initialValues,
+          mode: "onChange",   
+          reValidateMode: "onChange", 
         }}
       >
         {({ register, control, formState: { errors, isValid } }) => (
@@ -231,7 +233,7 @@ export default function SignUpForm() {
             <br />
             <button
               onClick={() => iniciarSesion()}
-              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded text-center"
+              className="mt-4 px-4 py-2 bg-gray-500 text-white rounded text-center" style={{ 'display': 'block' }}
             >
               Iniciar sesión
             </button>

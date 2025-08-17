@@ -15,7 +15,10 @@ export const signUpSchema = z.object({
   password: validatePassword,
   confirmPassword: validateConfirmPassword,
   isAgreed: z.boolean(),
-});
+})  .refine((data) => data.password === data.confirmPassword, {
+    message: "Las contraseñas no coinciden",
+    path: ["confirmPassword"], // 👈 muestra el error en el campo confirmPassword
+  });
 
 // generate form types from zod validation schema
 export type SignUpSchema = z.infer<typeof signUpSchema>;
