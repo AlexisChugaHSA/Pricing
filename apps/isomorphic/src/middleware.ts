@@ -8,18 +8,19 @@ export default withAuth({
 });
 
 export const config = {
-  // restricted routes
-  matcher: [
+  // restricted routes/*
+   matcher: [/*
     '/',
     '/executive',
     '/financial',
     '/analytics',
     '/logistics/:path*',
-    '/ecommerce/:path*',
+
     '/support/:path*',
     '/file/:path*',
     '/file-manager',
-    '/invoice/:path*',
-    '/forms/profile-settings/:path*',
+    '/invoice/:path*',*/
+ 
   ],
 };
+//    '/ecommerce/:path*',    '/forms/profile-settings/:path*',

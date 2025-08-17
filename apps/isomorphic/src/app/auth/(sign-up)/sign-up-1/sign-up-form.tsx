@@ -8,7 +8,7 @@ import { Password, Checkbox, Button, Input, Text, Title } from 'rizzui';
 import { Form } from '@ui/form';
 import { SignUpSchema, signUpSchema } from '@/validators/signup.schema';
 import { User } from '@/data/user'
-import { Usuario, guardarUsuario } from '@/app/services/usuario.service';
+import { Usuario, comprobarUsuario, guardarUsuario } from '@/app/services/usuario.service';
 import { routes } from '@/config/routes';
 import { useRouter } from 'next/navigation';
 import { PhoneNumber } from '@ui/phone-input';
@@ -29,9 +29,11 @@ const initialValues = {
 
 export default function SignUpForm() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [alertRepeatEmail, setAlertRepeatEmail] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const router = useRouter();
   const [reset, setReset] = useState({});
-  const [isOpenEfectivo, setIsOpenEfectivo] = useState(false);
+  const [isOpenBienvenida, setisOpenBienvenida] = useState(false);
   const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
     try {
       const nuevo_usuario: Usuario = {
@@ -47,21 +49,39 @@ export default function SignUpForm() {
         usuario: data.email,
         password: data.confirmPassword,
       };
-      //const response = await guardarUsuario(credenciales); //quitar esto cuando este la api
+      const response = await guardarUsuario(credenciales); //quitar esto cuando este la api
       // const response = await guardarUsuario(usuario); //agregar esto cuando este la api
-      console.log(usuario)
-      //console.log("Usuario guardado:", response);
-      /*
+      console.log("Usuario guardado:", response);
+
       if (response.id_usuario) {
-        router.push(routes.analytics); 
-      }*/
+        setisOpenBienvenida(true)
+      }
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
+    }
+  };
+  const handleDniBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
+    const correo = event.target.value.trim();
+    if (!correo) return;
+    try {
+      const usuario: any = await comprobarUsuario(correo);
+      if (usuario.id_usuario) {
+        setAlertRepeatEmail(true)
+      }
+      if (usuario.Mensaje == "NOEN") {
+        setAlertRepeatEmail(false)
+      }
+    } catch (error) {
+      console.error('Error al cargar el usuario:', error);
     }
   };
   useEffect(() => {
     setReset({ ...initialValues, isAgreed: false });
   }, []);
+  const iniciarSesion = () => {
+    setisOpenBienvenida(false)
+    router.push(routes.signIn)
+  }
 
   return (
     <>
@@ -73,7 +93,7 @@ export default function SignUpForm() {
           defaultValues: initialValues,
         }}
       >
-        {({ register, control, formState: { errors } }) => (
+        {({ register, control, formState: { errors, isValid } }) => (
           <div className="flex flex-col gap-x-4 gap-y-5 md:grid md:grid-cols-2 lg:gap-5">
             <Input
               type="text"
@@ -104,7 +124,14 @@ export default function SignUpForm() {
               placeholder="Ingresa tu correo"
               {...register('email')}
               error={errors.email?.message}
+              onBlur={(e) => handleDniBlur(e)}
             />
+            {alertRepeatEmail && (
+              <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-md border border-red-300" style={{ 'width': 'max-content' }}>
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                <span className="text-sm font-medium">Ya existe un usuario registrado con este correo</span>
+              </div>
+            )}
             <Controller
               control={control}
               name="telefono"
@@ -141,6 +168,8 @@ export default function SignUpForm() {
             <div className="col-span-2 flex items-start ">
               <Checkbox
                 {...register('isAgreed')}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                checked={acceptTerms}
                 className="[&>label>span]:font-medium [&>label]:items-start"
                 label={
                   <>
@@ -151,7 +180,7 @@ export default function SignUpForm() {
                     >
                       Términos
                     </Link>{' '}
-                    y {' '}
+                    y{' '}
                     <Link
                       href={routes.privacy_policy}
                       className="font-medium text-blue transition-colors hover:underline"
@@ -161,11 +190,18 @@ export default function SignUpForm() {
                   </>
                 }
               />
+
             </div>
-            <Button size="lg" type="submit" className="col-span-2 mt-2">
+            <Button
+              size="lg"
+              type="submit"
+              className="col-span-2 mt-2"
+              disabled={!isValid || !acceptTerms || alertRepeatEmail}
+            >
               <span>Empezar</span>{' '}
               <PiArrowRightBold className="ms-2 mt-0.5 h-5 w-5" />
             </Button>
+
           </div>
         )}
       </Form>
@@ -178,13 +214,10 @@ export default function SignUpForm() {
           Inicia sesión
         </Link>
       </Text>
-      <Button size="sm" className="w-full" onClick={() => setIsOpenEfectivo(true)}>
-        Evolutivo
-      </Button>
-      <Dialog open={isOpenEfectivo} onClose={setIsOpenEfectivo} className="relative z-50">
+      <Dialog open={isOpenBienvenida} onClose={setisOpenBienvenida} className="relative z-50">
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg" style={{'justifyItems':'center'}}>
+          <Dialog.Panel className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg" style={{ 'justifyItems': 'center' }}>
             <Title
               as="h1"
               className="text-center text-[22px] font-bold leading-normal text-gray-1000 lg:text-3xl"
@@ -193,11 +226,11 @@ export default function SignUpForm() {
             </Title>
             <br />
             <p className='text-center'>
-            Muchas gracias por registrarte en nuestra plataforma de analítica.
+              Muchas gracias por registrarte en nuestra plataforma de analítica.
             </p>
             <br />
             <button
-              onClick={() => setIsOpenEfectivo(false)}
+              onClick={() => iniciarSesion()}
               className="mt-4 px-4 py-2 bg-gray-500 text-white rounded text-center"
             >
               Iniciar sesión

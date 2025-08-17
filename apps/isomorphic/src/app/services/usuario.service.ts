@@ -77,11 +77,9 @@ export async function logoutUsuarioPorCorreo(usuario: string): Promise<void> {
 
 export async function comprobarUsuario(usuario: string): Promise<boolean> {
   try {
-    const response = await axios.get<boolean>(url+'usuario/existe', {
-      params: { usuario },
-    });
+    const response = await axios.get<boolean>(url+'comprobar-usuario/'+usuario);
     console.log('Usuario comprobado:', response.data);
-    return response.data; // Devuelve true si existe, false si no.
+    return response.data; 
   } catch (error) {
     console.error('Error al comprobar el usuario:', error);
     throw error;

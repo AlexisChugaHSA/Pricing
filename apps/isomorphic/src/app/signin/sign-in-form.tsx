@@ -11,7 +11,7 @@ import { routes } from '@/config/routes';
 import { loginSchema, LoginSchema } from '@/validators/login.schema';
 import { User } from '@/data/user';
 import { Usuario, loginUsuario } from '../services/usuario.service';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import LoadingOverlay from '../services/PopUps/PopUpCargando/loading';
 
 const initialValues: LoginSchema = {
@@ -25,12 +25,12 @@ const user: User = {
 };
 
 export default function SignInForm() {
-  //TODO: why we need to reset it here
+  const router = useRouter();
   const [reset, setReset] = useState({});
   const [alertOpenNOEN, setAlertOpenNOEN] = useState(false);
   const [alertOpenTK, setAlertOpenTK] = useState(false);
   const [cargando, setCargando] = useState(false);
-    const simularCarga = () => {
+  const simularCarga = () => {
     setCargando(true);
     setTimeout(() => {
       setCargando(false);
@@ -80,18 +80,18 @@ export default function SignInForm() {
 
   return (
     <>
-        <div className="relative">
-      <LoadingOverlay show={cargando} />
-      <div className={cargando ? 'pointer-events-none opacity-50' : ''}>
-        <h1 className="text-2xl font-bold mb-4">Mi App</h1>
-        <button
-          onClick={simularCarga}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md"
-        >
-          Simular carga
-        </button>
+      <div className="relative">
+        <LoadingOverlay show={cargando} />
+        <div className={cargando ? 'pointer-events-none opacity-50' : ''}>
+          <h1 className="text-2xl font-bold mb-4">Mi App</h1>
+          <button
+            onClick={simularCarga}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
+            Simular carga
+          </button>
+        </div>
       </div>
-    </div>
       <Form<LoginSchema>
         validationSchema={loginSchema}
         resetValues={reset}
@@ -144,7 +144,7 @@ export default function SignInForm() {
               <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-md border border-red-300">
                 <span className="w-2 h-2 rounded-full bg-red-500"></span>
                 <span className="text-sm font-medium">Este usuario ha iniciado sesion en otra máquina.
-                ¿Desea cerrar otras sesiones e ingresar en esta máquina?
+                  ¿Desea cerrar otras sesiones e ingresar en esta máquina?
                 </span>
                 <Button className="w-50" type="submit" size="lg">
                   <span>Sí</span>{' '}
