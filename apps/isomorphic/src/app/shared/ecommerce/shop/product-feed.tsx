@@ -64,8 +64,8 @@ export default function ProductFeed() {
     if (userId && token) {
       const loadProductsUser = async () => {
         try {
-          console.log(userId)
           const data = await obtenerProductoUsuarioById(userId, token);
+
           setProductsUser(data);
         } catch (error) {
           console.error('Error al cargar los productos del usuario:', error);
@@ -75,35 +75,51 @@ export default function ProductFeed() {
     }
   }, [userId, token]);
 
-  // Separar productosUsuario y otrosProductos
-  useEffect(() => {
-    if (products.length > 0 && productsUser.length > 0) {
-      const idsUsuario = productsUser.map((pu) => pu.id_producto);
+useEffect(() => {
+  if (products.length > 0 && productsUser.length > 0) {
+    const userProductIds = productsUser.map((pu) => pu.id_producto);
 
-      const productosDelUsuario = products.filter((p) =>
-        idsUsuario.includes(p.id_producto)
-      );
+const products_user_f = products.filter((p) =>
+  userProductIds.includes(Number(p.id_producto)) 
+);
+    console.log(products_user_f)
 
-      const productosRestantes = products.filter(
-        (p) => !idsUsuario.includes(p.id_producto)
-      );
+    const otros_productos = products.filter(
+      (p) => !userProductIds.includes(Number(p.id_producto))
+    );
 
-      setProductosUsuario(productosDelUsuario);
-      setOtrosProductos(productosRestantes);
+    setProductosUsuario(products_user_f);
+    setOtrosProductos(otros_productos);
+  }
+}, [products, productsUser]);
 
-      console.log('Productos del usuario:', productosDelUsuario);
-      console.log('Otros productos:', productosRestantes);
-    }
-  }, [products, productsUser]);
+
 
   const filteredData = hasSearchedParams()
-    ? shuffle(productosUsuario.concat(otrosProductos)) // si quieres mezclar
-    : productosUsuario.concat(otrosProductos);
+    ? shuffle(productosUsuario) // si quieres mezclar
+    : productosUsuario
+  const filteredData2 = hasSearchedParams()
+    ? shuffle(otrosProductos) // si quieres mezclar
+    : otrosProductos
+  
 
   return (
     <div className="@container">
+      <h2 className="text-2xl font-bold text-center my-6">Mis Productos</h2>
       <div className="grid grid-cols-1 gap-x-5 gap-y-6 @md:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] @xl:gap-x-7 @xl:gap-y-9 @4xl:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] @6xl:grid-cols-[repeat(auto-fill,minmax(364px,1fr))]">
         {filteredData
+          ?.slice(0, nextPage)
+          ?.map((product) => (
+            <ProductModernCard
+              key={product.id_producto}
+              product={product}
+              routes={routes}
+            />
+          ))}
+      </div>
+      <h2 className="text-2xl font-bold text-center my-6">Otros Productos</h2>
+      <div className="grid grid-cols-1 gap-x-5 gap-y-6 @md:grid-cols-[repeat(auto-fill,minmax(250px,1fr))] @xl:gap-x-7 @xl:gap-y-9 @4xl:grid-cols-[repeat(auto-fill,minmax(300px,1fr))] @6xl:grid-cols-[repeat(auto-fill,minmax(364px,1fr))]">
+        {filteredData2
           ?.slice(0, nextPage)
           ?.map((product) => (
             <ProductModernCard

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { PiDesktop } from 'react-icons/pi';
 import { Form } from '@ui/form';
@@ -12,6 +12,7 @@ import {
   passwordFormSchema,
   PasswordFormTypes,
 } from '@/validators/password-settings.schema';
+import { actualizarUsuario, comprobarPassword, Usuario } from '@/app/services/usuario.service';
 
 export default function PasswordSettingsView({
   settings,
@@ -20,8 +21,54 @@ export default function PasswordSettingsView({
 }) {
   const [isLoading, setLoading] = useState(false);
   const [reset, setReset] = useState({});
+  const [userId, setUserId] = useState<string>('');
+  const [token, setToken] = useState<string | null>(null);
+  const [usuario, setUsuario] = useState<Usuario>();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [alertOpenNOEN, setAlertOpenNOEN] = useState(false);
 
-  const onSubmit: SubmitHandler<PasswordFormTypes> = (data) => {
+
+
+  useEffect(() => {
+    const usuarioString = localStorage.getItem('usuario');
+    const tokenLS = localStorage.getItem('token');
+    if (usuarioString) {
+      try {
+        const usuario: any = JSON.parse(usuarioString);
+        setUsuario(usuario)
+        setUserId(usuario.id_usuario);
+      } catch (err) {
+        console.error('Error parseando usuario:', err);
+      }
+    }
+    if (tokenLS) {
+      setToken(tokenLS);
+    }
+  }, []);
+
+  const onSubmit: SubmitHandler<PasswordFormTypes> = async (data) => {
+    setAlertOpenNOEN(false)
+    if (usuario) {
+      const credenciales = { //cambiar esto cuando este la api
+        id_usuario: Number(usuario.id_usuario),
+        usuario: usuario.usuario,
+        password: data.currentPassword,
+        token: usuario.token
+      };
+      const response = await comprobarPassword(credenciales);
+      if (response.mensaje == "OK") {
+        credenciales.password=data.confirmedPassword
+        const act_user: any = await actualizarUsuario(credenciales)
+        console.log(act_user.mensaje)
+        console.log("Si")
+      }
+      if (response.mensaje == "NO") {
+        setAlertOpenNOEN(true)
+      }
+    }
+
+
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -32,6 +79,7 @@ export default function PasswordSettingsView({
         confirmedPassword: '',
       });
     }, 600);
+
   };
 
   return (
@@ -48,7 +96,18 @@ export default function PasswordSettingsView({
           },
         }}
       >
-        {({ register, control, formState: { errors }, getValues }) => {
+
+        {({ register, control, formState: { errors }, getValues, watch }) => {
+          const newPassword = watch('newPassword');
+          const confirmedPassword = watch('confirmedPassword');
+
+          useEffect(() => {
+            const isValidPassword = newPassword?.length >= 8;
+            const doPasswordsMatch = newPassword === confirmedPassword;
+            setIsButtonDisabled(!(isValidPassword && doPasswordsMatch));
+          }, [newPassword, confirmedPassword]);
+
+
           return (
             <>
               <ProfileHeader
@@ -58,7 +117,7 @@ export default function PasswordSettingsView({
 
               <div className="mx-auto w-full max-w-screen-2xl">
                 <HorizontalFormBlockWrapper
-                  title="Current Password"
+                  title="Contraseña actual"
                   titleClassName="text-base font-medium"
                 >
                   <Password
@@ -67,9 +126,15 @@ export default function PasswordSettingsView({
                     error={errors.currentPassword?.message}
                   />
                 </HorizontalFormBlockWrapper>
+                            {alertOpenNOEN && (
+              <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-md border border-red-300">
+                <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                <span className="text-sm font-medium">La contraseña ingresada es incorrecta</span>
+              </div>
+            )}
 
                 <HorizontalFormBlockWrapper
-                  title="New Password"
+                  title="Nueva contraseña"
                   titleClassName="text-base font-medium"
                 >
                   <Controller
@@ -90,7 +155,7 @@ export default function PasswordSettingsView({
                 </HorizontalFormBlockWrapper>
 
                 <HorizontalFormBlockWrapper
-                  title="Confirm New Password"
+                  title="Confirme su nueva contraseña"
                   titleClassName="text-base font-medium"
                 >
                   <Controller
@@ -110,16 +175,22 @@ export default function PasswordSettingsView({
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>
-                  <Button type="submit" variant="solid" isLoading={isLoading}>
+                  <Button
+                    type="submit"
+                    variant="solid"
+                    isLoading={isLoading}
+                    disabled={isButtonDisabled}
+                  >
                     Update Password
                   </Button>
+
                 </div>
               </div>
             </>
           );
         }}
       </Form>
-      <LoggedDevices className="mt-10" />
+      {/*<LoggedDevices className="mt-10" />*/}
     </>
   );
 }

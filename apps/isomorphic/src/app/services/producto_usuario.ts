@@ -41,7 +41,10 @@ export async function obtenerProductoUsuarioById(
     );
 
     // Normalizamos: si viene obj -> [obj]; si ya es array -> tal cual; si viene null/undefined -> []
-    if (Array.isArray(data)) return data;
+    if (Array.isArray(data)){
+      console.log(data) 
+      return data;}
+      console.log(data) 
     return data ? [data] : [];
   } catch (error) {
     console.error('Error al obtener los productos del usuario:', error);

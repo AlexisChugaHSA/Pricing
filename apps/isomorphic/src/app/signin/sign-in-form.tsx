@@ -60,17 +60,26 @@ export default function SignInForm() {
 
       const usuario: Usuario = {
         id_usuario: response.id_usuario,
-        usuario: user.correo,
-        nombre: 'Alexis',//response.nombre,//cambiar esto cuando este la api
-        apellido: 'Chuga',//response.apellido,//cambiar esto cuando este la api
-        telefono: '593987034462',//cambiar esto cuando este la api
+        usuario: user.correo, // Asegúrate que 'user' esté definido
+        nombre: response.nombre || 'Alexis', // Valor por defecto
+        apellido: response.apellido || 'Chuga', // Valor por defecto
+        telefono: response.telefono || '593987034462', // Valor por defecto
         token: response.token
       };
-      if (usuario.token) {
-        localStorage.setItem('usuario', JSON.stringify(usuario));
-        localStorage.setItem('token', usuario.token);
-        console.log(usuario)
-        router.push(routes.eCommerce.shop)
+
+      if (usuario.token) { // Esto verifica null, undefined, '', etc.
+        try {
+          localStorage.setItem('usuario', JSON.stringify(usuario));
+          localStorage.setItem('token', usuario.token);
+          console.log('Usuario almacenado:', usuario);
+          router.push(routes.eCommerce.shop);
+        } catch (error) {
+          console.error('Error al almacenar en localStorage:', error);
+          // Manejar el error adecuadamente
+        }
+      } else {
+        console.error('Token no recibido');
+        // Manejar el caso donde no hay token
       }
     } catch (err) {
       console.error(err);

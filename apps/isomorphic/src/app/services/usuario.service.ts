@@ -86,17 +86,52 @@ export async function comprobarUsuario(usuario: string): Promise<boolean> {
   }
 }
 
-export async function loginUsuarioSi(usuario: Usuario): Promise<UsuarioLogin> {
+export async function loginSiUsuario(correo: string, password: string): Promise<{ mensaje:string,id_usuario: number, token:string}> {
   try {
-    const response = await axios.post(`${url}login/si`, usuario, {
+    const response = await axios.post(url+'login/si', {
+      usuario: correo,
+      password: password,
+    }, {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
-    localStorage.setItem('token',response.data.token)
+
     return response.data;
   } catch (error) {
-    console.error('Error en el login:', error);
+    console.error('Error al realizar el login:', error);
+    throw error;
+  }
+}
+
+export async function comprobarPassword( usuario:Usuario): Promise<any> {
+  try {
+    const response = await axios.post(url+'comprobar_password',
+usuario
+    , {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log('Usuario comprobado:', response.data);
+    return response.data; 
+  } catch (error) {
+    console.error('Error al comprobar la contraseña:', error);
+    throw error;
+  }
+}
+
+export async function actualizarUsuario(usuario: Usuario): Promise<{ id_usuario: number, usuario:string }> {
+  try {
+    const response = await axios.put(url + 'usuario/'+usuario.id_usuario, usuario, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    console.log('Usuario actualizado exitosamente:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error al guardar el usuario:', error);
     throw error;
   }
 }
