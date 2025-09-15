@@ -61,21 +61,17 @@ export async function loginUsuario(correo: string, password: string): Promise<{ 
   }
 }
 
-export async function logoutUsuarioPorCorreo(usuario: string): Promise<void> {
+export async function logout(id_usuario: number): Promise<Usuario> {
   try {
-    const response = await axios.post(url+'logout-prueba', { usuario }, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    console.log('Logout exitoso:', response.data);
+    const response = await axios.post(url +'logout/'+id_usuario);
+    return response.data;
   } catch (error) {
-    console.error('Error al realizar el logout:', error);
+    console.error('Error al consultar el usuario por ID:', error);
     throw error;
   }
 }
 
-export async function comprobarUsuario(usuario: string): Promise<boolean> {
+export async function comprobarUsuario(usuario: string): Promise<any> {
   try {
     const response = await axios.get<boolean>(url+'comprobar-usuario/'+usuario);
     console.log('Usuario comprobado:', response.data);

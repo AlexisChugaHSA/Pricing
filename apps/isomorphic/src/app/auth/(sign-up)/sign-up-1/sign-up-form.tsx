@@ -34,6 +34,7 @@ export default function SignUpForm() {
   const router = useRouter();
   const [reset, setReset] = useState({});
   const [isOpenBienvenida, setisOpenBienvenida] = useState(false);
+  
   const onSubmit: SubmitHandler<SignUpSchema> = async (data) => {
     try {
       const nuevo_usuario: Usuario = {

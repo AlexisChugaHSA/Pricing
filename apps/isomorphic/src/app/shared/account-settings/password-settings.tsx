@@ -26,6 +26,8 @@ export default function PasswordSettingsView({
   const [usuario, setUsuario] = useState<Usuario>();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
   const [alertOpenNOEN, setAlertOpenNOEN] = useState(false);
+  const [alertSuccess, setAlertSuccess] = useState(false);
+
 
 
 
@@ -46,7 +48,7 @@ export default function PasswordSettingsView({
     }
   }, []);
 
-  const onSubmit: SubmitHandler<PasswordFormTypes> = async (data) => {
+  const onSubmit: SubmitHandler<PasswordFormTypes> = async (data, e) => {
     setAlertOpenNOEN(false)
     if (usuario) {
       const credenciales = { //cambiar esto cuando este la api
@@ -57,22 +59,26 @@ export default function PasswordSettingsView({
       };
       const response = await comprobarPassword(credenciales);
       if (response.mensaje == "OK") {
-        credenciales.password=data.confirmedPassword
+        credenciales.password = data.confirmedPassword
         const act_user: any = await actualizarUsuario(credenciales)
         console.log(act_user.mensaje)
-        console.log("Si")
+        setAlertSuccess(true);
+        setTimeout(() => setAlertSuccess(false), 3000);
       }
       if (response.mensaje == "NO") {
         setAlertOpenNOEN(true)
+        setIsButtonDisabled(true);
+
       }
     }
 
-
+    setIsButtonDisabled(true);
 
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       console.log('Password settings data ->', data);
+      e?.target?.reset();
       setReset({
         currentPassword: '',
         newPassword: '',
@@ -86,7 +92,6 @@ export default function PasswordSettingsView({
     <>
       <Form<PasswordFormTypes>
         validationSchema={passwordFormSchema}
-        resetValues={reset}
         onSubmit={onSubmit}
         className="@container"
         useFormProps={{
@@ -97,7 +102,7 @@ export default function PasswordSettingsView({
         }}
       >
 
-        {({ register, control, formState: { errors }, getValues, watch }) => {
+        {({ register, control, formState: { errors }, getValues, watch, reset }) => {
           const newPassword = watch('newPassword');
           const confirmedPassword = watch('confirmedPassword');
 
@@ -124,14 +129,17 @@ export default function PasswordSettingsView({
                     {...register('currentPassword')}
                     placeholder="Enter your password"
                     error={errors.currentPassword?.message}
+                    onFocus={(e) => {
+                      if (!e.target.value) {
+                        setAlertOpenNOEN(false);
+                      }
+                    }}
                   />
+                  {alertOpenNOEN && (
+                    <div role="alert" className=" col-span-2 text-red text-[13px] mt-0.5 rizzui-password-error-text">La contraseña ingresada es incorrecta</div>
+                  )}
                 </HorizontalFormBlockWrapper>
-                            {alertOpenNOEN && (
-              <div className="flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-md border border-red-300">
-                <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                <span className="text-sm font-medium">La contraseña ingresada es incorrecta</span>
-              </div>
-            )}
+
 
                 <HorizontalFormBlockWrapper
                   title="Nueva contraseña"
@@ -171,7 +179,18 @@ export default function PasswordSettingsView({
                   />
                 </HorizontalFormBlockWrapper>
 
+
                 <div className="mt-6 flex w-auto items-center justify-end gap-3">
+                  {alertSuccess && (
+                    <div
+                      className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-md border border-green-300"
+                      style={{ width: "max-content" }}
+                    >
+                      <span className="text-sm font-medium">
+                        Contraseña actualizada con éxito
+                      </span>
+                    </div>
+                  )}
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>
@@ -183,6 +202,8 @@ export default function PasswordSettingsView({
                   >
                     Update Password
                   </Button>
+
+
 
                 </div>
               </div>

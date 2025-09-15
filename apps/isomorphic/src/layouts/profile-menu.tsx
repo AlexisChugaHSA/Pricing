@@ -3,11 +3,12 @@
 import { Title, Text, Avatar, Button, Popover } from 'rizzui';
 import cn from '@utils/class-names';
 import { routes } from '@/config/routes';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Usuario } from '@/app/services/usuario.service';
+import { logout, Usuario } from '@/app/services/usuario.service';
+import router from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function ProfileMenu({
   buttonClassName,
@@ -51,10 +52,10 @@ function ProfileMenuPopover({ children }: React.PropsWithChildren<{}>) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
+
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
-
   return (
     <Popover
       isOpen={isOpen}
@@ -79,7 +80,28 @@ const menuItems = [
 ];
 
 function DropdownMenu() {
+  const router = useRouter();
   const usuarioGuardado = localStorage.getItem('usuario');
+      const [userId, setUserId] = useState<number | null>(null);
+  const handleLogout = async () => {
+    if (!usuarioGuardado) return;
+
+    try {
+      const usuario: Usuario = JSON.parse(usuarioGuardado) as Usuario;
+      if (usuario.id_usuario) {
+        const response: any = await logout(usuario.id_usuario);
+          if (response.mensaje === "OK") {
+            localStorage.removeItem("usuario");
+            localStorage.removeItem("token");
+            console.log("Cerrando sesión")
+            router.push(routes.signIn);
+          } else {
+            console.error("Error en logout:", response.mensaje);
+      }
+    }} catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
   if (usuarioGuardado) {
     const usuario: Usuario = JSON.parse(usuarioGuardado) as Usuario;
     return (
@@ -116,7 +138,7 @@ function DropdownMenu() {
           <Button
             className="h-auto w-full justify-start p-0 font-medium text-gray-700 outline-none focus-within:text-gray-600 hover:text-gray-900 focus-visible:ring-0"
             variant="text"
-            onClick={() => signOut()}
+            onClick={handleLogout}
           >
             Cerrar Sesión
           </Button>
