@@ -1,10 +1,6 @@
-# app/main.py
 from fastapi import FastAPI
+from app.routes.usuario import router as usuario_router 
 
-# Crear la aplicación
 app = FastAPI()
 
-# Definir una ruta de prueba
-@app.get("/")
-def read_root():
-    return {"message": "Hola Mundo con FastAPI 🚀"}
+app.include_router(usuario_router)

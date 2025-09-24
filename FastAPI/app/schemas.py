@@ -1,26 +1,48 @@
 # app/schemas.py
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 from typing import Optional
 from datetime import date
 from decimal import Decimal
+from bson import ObjectId
 
 # ==========================================================
 # USUARIO
 # ==========================================================
 class UsuarioBase(BaseModel):
     usuario: str
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    telefono: Optional[str] = None
 
 class UsuarioCreate(UsuarioBase):
     password: str
+    token: Optional[str] = None
+
+class UsuarioUpdate(UsuarioBase):
+    password: Optional[str] = None
 
 class UsuarioOut(UsuarioBase):
-    id_usuario: int
+    id_usuario: str
+    usuario: str
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    telefono: Optional[str] = None
     token: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        allow_population_by_field_name = True
+        populate_by_name = True
+        json_encoders = {ObjectId: str}
+        json_encoders = {str: str}
 
-
+class UsuarioCheckPassword(BaseModel):
+    id_usuario: Optional[str] = None
+    usuario: Optional[str] = None
+    password: str
+    nombre: Optional[str] = None
+    apellido: Optional[str] = None
+    telefono: Optional[str] = None
+    token: Optional[str] = None
 # ==========================================================
 # CATEGORIA
 # ==========================================================
