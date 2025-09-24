@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException
 from app.db import db
-from app.schemas import  UsuarioOut,UsuarioBase, UsuarioCreate, UsuarioUpdate, UsuarioCheckPassword
+from app.schemas import  UsuarioOut,LoginRequest,LoginResponse, UsuarioCreate, UsuarioUpdate, UsuarioCheckPassword
 from bson import ObjectId
 import hashlib 
 from passlib.hash import pbkdf2_sha256
+from app.core.auth import create_access_token, get_current_user
+from datetime import timedelta, datetime
 
-router = APIRouter(prefix="/usuarios", tags=["Usuarios"])
+router = APIRouter(prefix="/usuario", tags=["Usuarios"])
+
 
 
 @router.post("/", response_model=UsuarioOut)
@@ -103,3 +106,34 @@ async def comprobar_password(user: UsuarioCheckPassword):
             return {"mensaje": "NO"}
     
     return {"mensaje": "NO"}
+
+@router.post("/login", response_model=LoginResponse)
+async def login_user(login_data: LoginRequest):
+    usuario_db = await db.usuario.find_one({"usuario": login_data.usuario})
+
+    if not usuario_db:
+        return {"mensaje": "NOEN"}  # No encontrado
+
+    # Verificar la contraseña con pbkdf2_sha256
+    if not pbkdf2_sha256.verify(usuario_db.password, usuario_db["password"]):
+        return {"mensaje": "NOEN"}  # Contraseña incorrecta
+
+    # Revisar si ya tiene token
+    if usuario_db.get("token"):
+        return {"mensaje": "TK"}  # Ya tenía un token activo
+
+    # Crear nuevo access token
+    access_token = create_access_token({"sub": str(usuario_db["_id"])})
+    
+    # Guardar token en BD
+    await db.usuario.update_one(
+        {"_id": usuario_db["_id"]},
+        {"$set": {"token": access_token}}
+    )
+
+    return {
+        "mensaje": "OK",
+        "id_usuario": str(usuario_db["_id"]),
+        "usuario": usuario_db["usuario"],
+        "token": access_token
+    }

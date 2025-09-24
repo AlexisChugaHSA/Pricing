@@ -28,7 +28,7 @@ const initialValues = {
 
 
 export default function SignUpForm() {
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [usuario, setUsuario] = useState<Usuario>();
   const [alertRepeatEmail, setAlertRepeatEmail] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const router = useRouter();
@@ -44,14 +44,7 @@ export default function SignUpForm() {
         telefono: data.telefono,
         password: data.confirmPassword,
       };
-      setUsuario(nuevo_usuario);
-      //eliminar esto cuando esté la api
-      const credenciales = {
-        usuario: data.email,
-        password: data.confirmPassword,
-      };
-      const response = await guardarUsuario(credenciales); //quitar esto cuando este la api
-      // const response = await guardarUsuario(usuario); //agregar esto cuando este la api
+      const response = await guardarUsuario(nuevo_usuario); //agregar esto cuando este la api
       console.log("Usuario guardado:", response);
 
       if (response.id_usuario) {

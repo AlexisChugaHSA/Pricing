@@ -43,6 +43,18 @@ class UsuarioCheckPassword(BaseModel):
     apellido: Optional[str] = None
     telefono: Optional[str] = None
     token: Optional[str] = None
+    
+class LoginRequest(BaseModel):
+    usuario: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    mensaje: str
+    id_usuario: str | None = None
+    token: str | None = None
+
+
 # ==========================================================
 # CATEGORIA
 # ==========================================================
@@ -249,19 +261,12 @@ class LogProdUserOut(LogProdUserBase):
 # ==========================================================
 # MEMBRESIAS
 # ==========================================================
-class MembresiaBase(BaseModel):
+class Membresia(BaseModel):
+    id_membresia: str
     tipo: str
-    descuento: Optional[float] = None
+    periodo: int
+    descuento: float
     activo: bool
-
-class MembresiaCreate(MembresiaBase):
-    pass
-
-class MembresiaOut(MembresiaBase):
-    id_membresia: int
-
-    class Config:
-        orm_mode = True
 
 
 # ==========================================================
