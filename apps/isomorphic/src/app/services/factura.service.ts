@@ -5,7 +5,7 @@ export const url=GLOBAL.url
 
 export interface Factura {
   id_factura?: number;
-  id_metodo_pago?:number; //aumentar esto
+  id_metodo_pago?:number; 
   id_empresa: number;
   total: number;
   subtotal: number;
@@ -16,7 +16,7 @@ export interface Factura {
   nombre_empresa: string;
   telefono_empresa: string;
   correo_empresa: string;
-  direccion_empresa?:string; //aumentar esto
+  direccion_empresa?:string; 
   id_usuario: number;
   sri:string;
 }
@@ -29,7 +29,7 @@ export interface DetFactura {
   precio?: number;
 }
 export interface Iva{
-  id_iva:number;
+  id_iva:string;
   iva_valor:number;
 }
 

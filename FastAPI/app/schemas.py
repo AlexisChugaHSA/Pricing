@@ -200,7 +200,8 @@ class EmpresaOut(EmpresaBase):
 # FACTURACION
 # ==========================================================
 class FacturacionBase(BaseModel):
-    id_empresa: int
+    id_empresa: str
+    id_metodo_pago: str
     total: float
     subtotal: float
     iva: float
@@ -211,13 +212,13 @@ class FacturacionBase(BaseModel):
     correo_empresa: Optional[str] = None
     id_usuario: Optional[int] = None
     sri: Optional[str] = None
-    fecha: Optional[str] = None  # si quieres más estricto → datetime.date
+    fecha: Optional[str] = None  
 
 class FacturacionCreate(FacturacionBase):
     pass
 
 class FacturacionOut(FacturacionBase):
-    id_factura: int
+    id_factura: str
 
     class Config:
         orm_mode = True
@@ -227,13 +228,13 @@ class FacturacionOut(FacturacionBase):
 # IVA
 # ==========================================================
 class IVABase(BaseModel):
-    IVA_valor: Decimal
+    iva_valor: Decimal
 
 class IVACreate(IVABase):
     pass
 
 class IVAOut(IVABase):
-    id_IVA: int
+    id_iva: str
 
     class Config:
         orm_mode = True
