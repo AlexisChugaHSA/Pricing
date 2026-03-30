@@ -25,7 +25,7 @@ export default function SignInForm() {
     signIn('credentials', {
       ...data,
     });
-    setReset({ email: "", password: "", isRememberMe: false });
+    // setReset({ email: "", password: "", isRememberMe: false });
   };
 
   return (
@@ -44,16 +44,16 @@ export default function SignInForm() {
             <Input
               type="email"
               size="lg"
-              label="Usuario"
-              placeholder="Ingrese su usuario"
+              label="Email"
+              placeholder="Enter your email"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
               {...register('email')}
               error={errors.email?.message}
             />
             <Password
-              label="Contraseña"
-              placeholder="Ingrese su contraseña"
+              label="Password"
+              placeholder="Enter your password"
               size="lg"
               className="[&>label>span]:font-medium"
               inputClassName="text-sm"
@@ -71,11 +71,11 @@ export default function SignInForm() {
                 href={routes.auth.forgotPassword1}
                 className="h-auto p-0 text-sm font-semibold text-blue underline transition-colors hover:text-gray-900 hover:no-underline"
               >
-                Olvidaste tu contraseña?
+                Forget Password?
               </Link>
             </div>
             <Button className="w-full" type="submit" size="lg">
-              <span>Iniciar sesión</span>{' '}
+              <span>Sign in</span>{' '}
               <PiArrowRightBold className="ms-2 mt-0.5 h-6 w-6" />
             </Button>
           </div>

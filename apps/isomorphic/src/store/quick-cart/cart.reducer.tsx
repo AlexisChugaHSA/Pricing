@@ -24,9 +24,7 @@ type Action =
   | { type: 'UPDATE_ITEM'; id: Item['id']; item: UpdateItemInput }
   | { type: 'REMOVE_ITEM'; id: Item['id'] }
   | { type: 'RESET_CART' }
-  | { type: 'UPDATE_ALL_QUANTITIES'; quantity: number }
   | { type: 'UPDATE_CART_LANGUAGE'; language: string };
-  
 
 export interface State {
   items: Item[];
@@ -54,7 +52,6 @@ export function cartReducer(state: State, action: Action): State {
       const items = [...state.items, ...action.items];
       return generateFinalState(state, items);
     }
-    
     case 'ADD_ITEM_WITH_QUANTITY': {
       const items = addItemWithQuantity(
         state.items,
@@ -81,13 +78,6 @@ export function cartReducer(state: State, action: Action): State {
     }
     case 'UPDATE_ITEM': {
       const items = updateItem(state.items, action.id, action.item);
-      return generateFinalState(state, items);
-    }
-    case 'UPDATE_ALL_QUANTITIES': {
-      const items = state.items.map(item => ({
-        ...item,
-        quantity: action.quantity, // Cambiar la cantidad de todos los ítems
-      }));
       return generateFinalState(state, items);
     }
     case 'UPDATE_CART_LANGUAGE': {

@@ -7,10 +7,9 @@ import { Title, Text } from 'rizzui';
 import { toCurrency } from '@utils/to-currency';
 import { CartItem } from '@/types';
 
-
 const columns = [
   {
-    title: <HeaderCell title="Producto" />,
+    title: <HeaderCell title="Product" />,
     dataIndex: 'product',
     key: 'product',
     width: 250,
@@ -34,7 +33,7 @@ const columns = [
     ),
   },
   {
-    title: <HeaderCell title="Precio unitario" align="right" />,
+    title: <HeaderCell title="Product Price" align="right" />,
     dataIndex: 'price',
     key: 'price',
     width: 200,
@@ -43,7 +42,7 @@ const columns = [
     ),
   },
   {
-    title: <HeaderCell title="Tiempo" align="center" />,
+    title: <HeaderCell title="Quantity" align="center" />,
     dataIndex: 'quantity',
     key: 'quantity',
     width: 150,
@@ -53,7 +52,7 @@ const columns = [
   },
 
   {
-    title: <HeaderCell title="Subtotal" align="right" />,
+    title: <HeaderCell title="Price" align="right" />,
     dataIndex: 'price',
     key: 'price',
     width: 200,
@@ -67,7 +66,6 @@ const columns = [
 
 export default function OrderViewProducts() {
   const { items } = useCart();
-
   return (
     <Table
       data={items}

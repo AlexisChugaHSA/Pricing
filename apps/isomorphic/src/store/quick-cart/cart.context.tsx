@@ -26,7 +26,6 @@ interface CartProviderState extends State {
   isInStock: (id: Item['id']) => boolean;
   resetCart: () => void;
   updateCartLanguage: (language: string) => void;
-  updateAllQuantities: (quantity: number) => void;
 }
 
 export const cartContext = createContext<CartProviderState | undefined>(
@@ -59,7 +58,6 @@ export function CartProvider({
     cartReducer,
     (savedCart ? JSON.parse(savedCart) : initialState) as State
   );
-  
   const [, emptyVerifiedResponse] = useAtom(verifiedResponseAtom);
   useEffect(() => {
     emptyVerifiedResponse(null);
@@ -77,9 +75,6 @@ export function CartProvider({
     dispatch({ type: 'REMOVE_ITEM_OR_QUANTITY', id });
   const clearItemFromCart = (id: Item['id']) =>
     dispatch({ type: 'REMOVE_ITEM', id });
-  const updateAllQuantities = (quantity: number) => {
-    dispatch({ type: 'UPDATE_ALL_QUANTITIES', quantity });
-  };
   const isInCart = useCallback(
     (id: Item['id']) => !!getItem(state.items, id),
     [state.items]
@@ -107,7 +102,6 @@ export function CartProvider({
       isInStock,
       resetCart,
       updateCartLanguage,
-      updateAllQuantities,
     }),
     [getItemFromCart, isInCart, isInStock, state]
   );

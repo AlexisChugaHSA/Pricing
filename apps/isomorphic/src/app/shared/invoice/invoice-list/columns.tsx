@@ -62,7 +62,7 @@ export const getColumns = ({
   onHeaderCellClick,
   handleSelectAll,
   onChecked,
-}: Columns) => [/*
+}: Columns) => [
   {
     title: (
       <div className="ps-2">
@@ -76,7 +76,7 @@ export const getColumns = ({
     ),
     dataIndex: 'checked',
     key: 'checked',
-    width: 15,
+    width: 30,
     render: (_: any, row: any) => (
       <div className="inline-flex ps-2">
         <Checkbox
@@ -86,48 +86,45 @@ export const getColumns = ({
         />
       </div>
     ),
-  },*/
+  },
   {
-    title: <HeaderCell title="Num. Factura" />,
-    dataIndex: 'id_factura',
-    key: 'id_factura',
-    width: 30,
-    render: (value: number) => (
-      <div className="flex items-center justify-center gap-3 pe-3">
-        {value}
-      </div>
+    title: <HeaderCell title="Customer" />,
+    dataIndex: 'customer',
+    key: 'customer',
+    width: 250,
+
+    render: (_: string, row: Invoice) => (
+      <AvatarCard
+        src={row.avatar}
+        name={row.name}
+        description={`INV-${row.id}`}
+      />
     ),
   },
-  /*
   {
-    title: <HeaderCell title="Fecha" />,
+    title: <HeaderCell title="Email" />,
     dataIndex: 'email',
     key: 'email',
     width: 250,
     render: (email: string) => email.toLowerCase(),
   },
-  */
   {
     title: (
       <HeaderCell
-        title="Fecha"
+        title="Created"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'fecha'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'createdAt'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('fecha'),
-    dataIndex: 'fecha',
-    key: 'fecha',
-    width: 30,
-    render: (value: string) =>(
-      <Text className="font-medium text-gray-700 dark:text-gray-600">
-        {value}
-      </Text>
-    ),
+    onHeaderCell: () => onHeaderCellClick('createdAt'),
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+    width: 200,
+    render: (value: Date) => <DateCell date={value} />,
   },
-  /*{
+  {
     title: (
       <HeaderCell
         title="Due Date"
@@ -142,43 +139,41 @@ export const getColumns = ({
     key: 'dueDate',
     width: 200,
     render: (value: Date) => <DateCell date={value} />,
-  },*/
+  },
   {
     title: (
       <HeaderCell
-        title="Importe Facturado"
+        title="Amount"
         sortable
         ascending={
-          sortConfig?.direction === 'asc' && sortConfig?.key === 'total'
+          sortConfig?.direction === 'asc' && sortConfig?.key === 'amount'
         }
       />
     ),
-    onHeaderCell: () => onHeaderCellClick('total'),
-    dataIndex: 'total',
-    key: 'total',
-    width: 30,
-    render: (value: number) => (
-      <div className="flex items-center justify-center gap-3 pe-3">
-        {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)} USD
-      </div>
+    onHeaderCell: () => onHeaderCellClick('amount'),
+    dataIndex: 'amount',
+    key: 'amount',
+    width: 200,
+    render: (value: string) => (
+      <Text className="font-medium text-gray-700 dark:text-gray-600">
+        ${value}
+      </Text>
     ),
   },
-  /*
   {
     title: <HeaderCell title="Status" />,
     dataIndex: 'status',
     key: 'status',
     width: 120,
     render: (value: string) => getStatusBadge(value),
-  },*/
+  },
   {
-    title: <HeaderCell title="Ver Detalles" />,
+    title: <></>,
     dataIndex: 'action',
     key: 'action',
-    width: 20,
+    width: 140,
     render: (_: string, row: any) => (
-      <div className="flex items-center justify-center gap-3 pe-3">
-        {/*
+      <div className="flex items-center justify-end gap-3 pe-3">
         <Tooltip
           size="sm"
           content={'Edit Invoice'}
@@ -195,14 +190,14 @@ export const getColumns = ({
               <PencilIcon className="h-4 w-4" />
             </ActionIcon>
           </Link>
-        </Tooltip>*/}
+        </Tooltip>
         <Tooltip
           size="sm"
           content={'View Invoice'}
-          placement="top-start"
+          placement="top"
           color="invert"
         >
-          <Link href={routes.invoice.details(String(row.id_factura))}>
+          <Link href={routes.invoice.details(row.id)}>
             <ActionIcon
               as="span"
               size="sm"
@@ -213,12 +208,11 @@ export const getColumns = ({
             </ActionIcon>
           </Link>
         </Tooltip>
-         {/*
         <DeletePopover
           title={`Delete the invoice`}
           description={`Are you sure you want to delete this #${row.id} invoice?`}
           onDelete={() => onDeleteItem(row.id)}
-        />*/}
+        />
       </div>
     ),
   },

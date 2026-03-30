@@ -31,7 +31,7 @@ export const defaultColumns = [
   }),
   columnHelper.accessor('availabilityDate', {
     size: 160,
-    header: 'Availability Date Test',
+    header: 'Availability Date',
   }),
   columnHelper.accessor('views', {
     size: 120,

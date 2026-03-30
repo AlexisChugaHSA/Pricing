@@ -1,6 +1,4 @@
 export const routes = {
-  privacy_policy: '/privacy-policy',
-  terms_conditions:'/terms-conditions',
   eCommerce: {
     dashboard: '/ecommerce',
     products: '/ecommerce/products',
@@ -13,7 +11,6 @@ export const routes = {
     orders: '/ecommerce/orders',
     createOrder: '/ecommerce/orders/create',
     orderDetails: (id: string) => `/ecommerce/orders/${id}`,
-    newOrder: '/ecommerce/neworder',
     editOrder: (id: string) => `/ecommerce/orders/${id}/edit`,
     reviews: '/ecommerce/reviews',
     shop: '/ecommerce/shop',
@@ -66,9 +63,7 @@ export const routes = {
     dashboard: '/job-board',
     jobFeed: '/job-board/feed',
   },
-    //analytics: (id: string) => `/analytics/${id}`,
   analytics: '/analytics',
-  analytics2: (id: string) => `/analytics/${id}`,
   financial: {
     dashboard: '/financial',
   },

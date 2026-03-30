@@ -9,33 +9,14 @@ import ProductDetailsSummery from '@/app/shared/ecommerce/product/product-detail
 import ProductDetailsReview from '@/app/shared/ecommerce/product/product-details-review';
 import { modernProductsGrid } from '@/data/shop-products';
 import { generateSlug } from '@utils/generate-slug';
-import { obtenerProductos, Producto } from '@/app/services/producto.service';
-import { useEffect, useMemo, useRef, useState } from 'react';
-
-
 
 export default function ProductDetails() {
-  const [products, setProducts] = useState<Producto[]>([]);
-    useEffect(() => {
-      const loadProducts = async () => {
-        try {
-          const data = await obtenerProductos();
-          setProducts(data);
-        } catch (error) {
-          console.error('Error al cargar los productos:', error);
-        }
-      };
-      loadProducts();
-    }, []);
   const params = useParams();
-  const product = useMemo(() => {
-    
-    return (
-      products.find((item) =>item.nombre === params.slug) ?? products[0]
-    );
-  }, [products, params.slug]);
+  const product =
+    modernProductsGrid.find(
+      (item) => generateSlug(item.title) === params.slug
+    ) ?? modernProductsGrid[0];
 
-    if(product){
   return (
     <div className="@container">
       <div className="@3xl:grid @3xl:grid-cols-12">
@@ -44,13 +25,12 @@ export default function ProductDetails() {
         </div>
         <div className="col-span-5 @container">
           <ProductDetailsSummery product={product} />
-          {/*<ProductDeliveryOptions />
+          <ProductDeliveryOptions />
           <ProductDetailsDescription />
-          <ProductDetailsReview />*/}
+          <ProductDetailsReview />
         </div>
       </div>
-       <ProductDetailsRelatedProducts product={product}/>
+      <ProductDetailsRelatedProducts />
     </div>
   );
 }
-return null;}

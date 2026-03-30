@@ -35,13 +35,5 @@
   "packageManager": "pnpm@9.1.4",
   "engines": {
     "node": ">=18"
-  },
-  "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "^6.7.2",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@paypal/react-paypal-js": "^8.8.2",
-    "axios": "^1.7.9",
-    "lucide-react": "^0.539.0",
-    "react-router-dom": "^7.3.0"
   }
 }

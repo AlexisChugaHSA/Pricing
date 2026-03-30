@@ -210,7 +210,7 @@ export const berylliumSidebarMenuItems = [
     ],
   },
   {
-    name: 'Facturación',
+    name: 'Invoice',
     href: '#',
     icon: <PiCurrencyDollar />,
     dropdownItems: [

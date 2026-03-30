@@ -59,7 +59,7 @@ export default function BasicTableWidget({
   paginatorClassName,
   noGutter,
   sticky,
-  scroll = { x: 1100 },
+  scroll = { x: 1300 },
   className,
   searchPlaceholder = 'Search...',
 }: BasicTableWidgetProps) {

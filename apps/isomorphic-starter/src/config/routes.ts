@@ -1,5 +1,4 @@
 export const routes = {
-  privacyPolicy: '/politica-privacidad',
   eCommerce: {
     dashboard: "/ecommerce",
     products: "/ecommerce/products",

@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useAtomValue } from 'jotai';
 import isEmpty from 'lodash/isEmpty';
 import { PiCheckBold } from 'react-icons/pi';
-import Membresias from './membresias';
 import {
   billingAddressAtom,
   orderNoteAtom,
@@ -12,46 +11,51 @@ import {
 } from '@/store/checkout';
 import OrderViewProducts from '@/app/shared/ecommerce/order/order-products/order-view-products';
 import { useCart } from '@/store/quick-cart/cart.context';
-import { Title, Text, Button } from 'rizzui';
+import { Title, Text } from 'rizzui';
 import cn from '@utils/class-names';
 import { toCurrency } from '@utils/to-currency';
 import { formatDate } from '@utils/format-date';
 import usePrice from '@hooks/use-price';
-import PayPalButtonComponent from '@/app/services/paypal.service';
-import { guardarFactura, Iva, obtenerIva } from '@/app/services/factura.service';
-import { useEffect, useState } from 'react';
-import { Membresia } from '@/app/services/membresia.service';
-import { useForm, FormProvider, Controller, useFormContext } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Input } from 'rizzui';
-import { PhoneNumber } from '@ui/phone-input';
-import * as z from 'zod';
-import { Empresa, comprobarEmpresa, guardarEmpresa } from '@/app/services/empresa.service';
-import { Factura, DetFactura,guardarDetalleFactura } from '@/app/services/factura.service';
-import { guardarPago, Pago } from '@/app/services/pago.service';
-import { guardarMetodoPago, MetodoPago } from '@/app/services/metodo_pago.service';
-import { ProductoUsuario,guardarProductoUsuario } from '@/app/services/producto_usuario';
-
 
 const orderStatus = [
-  { id: 1, label: 'Selección de productos' },
-  { id: 2, label: 'Creación de orden' },
-  { id: 3, label: 'Selección de membresía' },
-  { id: 4, label: 'Realizar el pago' },
+  { id: 1, label: 'Order Pending' },
+  { id: 2, label: 'Order Processing' },
+  { id: 3, label: 'Order At Local Facility' },
+  { id: 4, label: 'Order Out For Delivery' },
+  { id: 5, label: 'Order Completed' },
+];
+
+const transitions = [
+  {
+    id: 1,
+    paymentMethod: {
+      name: 'MasterCard',
+      image:
+        'https://isomorphic-furyroad.s3.amazonaws.com/public/payment/master.png',
+    },
+    price: '$1575.00',
+  },
+  {
+    id: 2,
+    paymentMethod: {
+      name: 'PayPal',
+      image:
+        'https://isomorphic-furyroad.s3.amazonaws.com/public/payment/paypal.png',
+    },
+    price: '$75.00',
+  },
+  {
+    id: 2,
+    paymentMethod: {
+      name: 'Stripe',
+      image:
+        'https://isomorphic-furyroad.s3.amazonaws.com/public/payment/stripe.png',
+    },
+    price: '$375.00',
+  },
 ];
 
 const currentOrderStatus = 3;
-
-const facturaSchema = z.object({
-  dniRuc: z.string().min(10, 'Debe tener al menos 10 caracteres'),
-  nombre: z.string().min(3, 'El nombre es obligatorio'),
-  correo: z.string().email('Ingrese un correo válido'),
-  direccion: z.string().min(1, 'La dirección es obligatoria'),
-  telefono: z.string().min(10, 'Ingrese un número válido'),
-});
-
-type FacturaFormInput = z.infer<typeof facturaSchema>;
-
 
 function WidgetCard({
   title,
@@ -84,47 +88,8 @@ function WidgetCard({
   );
 }
 
-
 export default function OrderView() {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No hay token disponible');
-    return;
-  }
-  const id_usuario=45;
   const { items, total, totalItems } = useCart();
-  const [iva, setIva] = useState<Iva | null>(null);
-  const storedMembresia = localStorage.getItem('membresia');
-  const [empresa, setEmpresa] = useState<Partial<Empresa>>({});
-  const [factura, setFactura] = useState<Partial<Factura>>({});
-
-  let membresia: Membresia | null = null;
-  if (storedMembresia) {
-    try {
-      membresia = JSON.parse(storedMembresia) as Membresia;
-    } catch (error) {
-      console.error('Error al parsear la membresía desde localStorage:', error);
-      localStorage.removeItem('membresia'); // Eliminar datos corruptos
-    }
-  }
-
-  const transformToPayPalItems = (items: any[]) => {
-    return items.map((product) => ({
-      name: product.name,
-      unit_amount: {
-        currency_code: "USD",
-        value: (
-          membresia
-            ? product.price * (1 - membresia.descuento)
-            : product.price
-        ).toFixed(2)
-      },
-      quantity: product.quantity.toString()
-    }));
-  };
-
-  const paypalItems = transformToPayPalItems(items);
-
   const { price: subtotal } = usePrice(
     items && {
       amount: total,
@@ -134,320 +99,13 @@ export default function OrderView() {
     amount: total,
   });
   const orderNote = useAtomValue(orderNoteAtom);
-
-  useEffect(() => {
-    const loadIva = async () => {
-      try {
-        const data = await obtenerIva(token);
-        setIva(data);
-      } catch (error) {
-        console.error('Error al cargar el valor del IVA:', error);
-      }
-    };
-    loadIva();
-  }, []);
-
-  const periodo=membresia?.periodo??1;
-  const iva_valor=iva?.iva_valor??0.15
-  const subtotalValue = parseFloat(subtotal.replace(/[^0-9.]/g, "")) || 0;
-  const descuentoValue = membresia?.descuento ?? 0;
-  const descuento = subtotalValue * descuentoValue;
-  const totalDescuento = subtotalValue * (1 - descuentoValue);
-  const totalIva = iva ? iva.iva_valor * totalDescuento : totalDescuento;
-  const totalF = totalIva + totalDescuento
-
-
-
-  if (iva === null && membresia === null && totalDescuento === null && paypalItems === null) {
-    return <div>Cargando...</div>;
-  }
-  const methods = useForm<FacturaFormInput>({
-    resolver: zodResolver(facturaSchema),
-  });
-  const handleDniBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
-    const dniRuc = event.target.value.trim();
-    if (!dniRuc) return;
-    methods.setValue('nombre', '');
-    methods.setValue('correo', '');
-    methods.setValue('direccion', '');
-    methods.setValue('telefono', '');
-    try {
-      const empresa = await comprobarEmpresa(dniRuc);
-      if (empresa) {
-        methods.setValue('nombre', empresa.nombre);
-        methods.setValue('correo', empresa.correo);
-        methods.setValue('direccion', empresa.direccion);
-        methods.setValue('telefono', empresa.telefono);
-      }
-    } catch (error) {
-      console.error('Error al cargar la empresa:', error);
-    }
-  };
-
-  const onSubmit = async (data: any) => {
-    try {
-      let empresaData: Empresa;
-      if (empresa?.id_empresa) {
-        empresaData = {
-          id_empresa:       empresa.id_empresa,
-          id_metodo_pago:   40,  
-          identificacion:   empresa.identificacion!, 
-          nombre:           empresa.nombre!,
-          direccion:        empresa.direccion!,
-          telefono:         empresa.telefono!,
-          correo:           empresa.correo!
-        };
-        console.log("Usando empresa existente:", empresaData);
-      } else {
-        const nuevaEmpresa: Omit<Empresa, 'id_empresa'> = {
-          id_metodo_pago: 40,       
-          identificacion: data.dniRuc,
-          nombre: data.nombre,
-          direccion: data.direccion,
-          telefono: data.telefono,
-          correo: data.correo
-        };
-        console.log("Creando nueva empresa:", nuevaEmpresa);
-        const empresaGuardada = await guardarEmpresa(nuevaEmpresa, token);
-        if (!empresaGuardada?.id_empresa) {
-          throw new Error("No se ha podido guardar la empresa");
-        }
-        empresaData = empresaGuardada;
-        console.log("Empresa guardada:", empresaData);
-      }
-      setFactura((prev) => ({
-        ...prev,
-        id_empresa:        empresaData.id_empresa,
-        nombre_empresa:    empresaData.nombre,
-        ruc_empresa:       empresaData.identificacion,
-        correo_empresa:    empresaData.correo,
-        direccion_empresa: empresaData.direccion,
-        telefono_empresa:  empresaData.telefono
-      }));
-      console.log("Estado de factura actualizado con empresa:", empresaData.id_empresa);
-  
-    } catch (error: any) {
-      console.error("Error en onSubmit de empresa:", error);
-      alert("No se pudo procesar la información de la empresa. Intenta de nuevo.");
-    }
-  };
-  
-  const today = new Date();
-  const fechaHoy = today.toISOString().split('T')[0];
-  const fechaHastaDate = new Date(today.setMonth(today.getMonth() + periodo));
-  const fechaHasta = fechaHastaDate.toISOString().split('T')[0];
-  const nombresConcatenados = items.map(item => item.name).join('-');
-/*
-  const handlePaymentApproved = async (orderId: string,nombre_cliente:string) => {
-    const metodoPago: MetodoPago = {
-      nombre:nombre_cliente,
-      tarjeta:orderId
-    };
-    const metodoPagoR = await guardarMetodoPago(metodoPago, token);
-    console.log("Metodo pago guardado");
-    const pago: Pago={
-      id_empresa:empresa.id_empresa,
-      procesado:1,
-      intentos:0,
-      valor:parseFloat(totalF.toFixed(2)),
-      descuento:parseFloat(descuentoValue.toFixed(2)),
-      cancelado:0,
-      detalle:nombresConcatenados,
-      fecha:fechaHoy,
-      fecha_hasta:fechaHasta,
-      periodo:periodo
-    }
-    const pagoR = await guardarPago(pago,token);
-    console.log("Pago guardada");
-    setFactura((prev) => ({...prev, fecha:fechaHoy,id_metodo_pago:metodoPagoR.id_metodo_pago,
-      sri:"",subtotal:parseFloat(totalDescuento.toFixed(2)),total:parseFloat(totalF.toFixed(2)),
-      iva: iva_valor,iva_0:iva_valor
-    }))
-    const facturaCompleta: Factura = {
-      ...factura as Factura
-    };
-    const facturaR = await guardarFactura(facturaCompleta,token)
-    console.log("Factura guardada");
-    if (!facturaR.id_factura || !pagoR.id_pago) {
-      throw new Error("Faltan datos en factura o pago");
-    }
-    const detalleFactura:DetFactura={
-      id_factura:facturaR.id_factura,
-      id_pago:pagoR.id_pago,
-    }
-    let productosGuardados = 0;
-    const totalProductos = items.length;
-  
-    for (const producto of items) {
-      try {
-        const detalle = {
-          ...detalleFactura,
-          id_producto: producto.id,
-          precio:parseFloat(producto.price.toFixed(2))
-        };
-  
-        await guardarDetalleFactura(detalle,token);
-        productosGuardados++;
-        console.log("Detalle factura guardado");
-  
-        if (productosGuardados === totalProductos) {
-          const totalProductos = items.length;
-          let productosGuardados = 0;
-          for (const producto of items) {
-            const prod_user: ProductoUsuario = {
-              id_usuario: id_usuario,
-              activo: 1,
-              id_pago: pagoR.id_pago,
-              periodo: periodo,
-              id_producto: producto.id,
-              precio: producto.price
-            };
-          
-            try {
-              const result = await guardarProductoUsuario(prod_user, token);
-              productosGuardados++;
-              console.log("Producto-Usuario guardado");
-              if (productosGuardados === totalProductos) {
-                console.log("Todo se ha guardado con éxito")
-              }
-            } catch (error) {
-              console.error("Error al guardar Producto-Usuario:", error);
-              break; 
-            }
-          }
-          
-        }
-      } catch (error) {
-        console.error("Error al guardar detalle:", error);
-        alert("Error al guardar el pago"); // Aquí puedes usar un modal también
-        break;
-      }
-    }
-    
-  };*/
-  const handlePaymentApproved = async (orderId: string, nombre_cliente: string) => {
-    try {
-      // 1. Guardar método de pago
-      const metodoPago: MetodoPago = {
-        nombre: nombre_cliente,
-        tarjeta: orderId,
-      };
-      const metodoPagoR = await guardarMetodoPago(metodoPago, token);
-      console.log("Método de pago guardado");
-  
-      // 2. Guardar pago
-      if (!factura?.id_empresa) {
-        throw new Error('Faltan datos de empresa o usuario en factura');
-      }
-      const pago: Pago = {
-        id_empresa: factura.id_empresa,
-        procesado: 1,
-        intentos: 0,
-        valor: parseFloat(totalF.toFixed(2)),
-        descuento: parseFloat(descuentoValue.toFixed(2)),
-        cancelado: 0,
-        detalle: nombresConcatenados,
-        fecha: fechaHoy,
-        fecha_hasta: fechaHasta,
-        periodo: periodo,
-      };
-
-      const pagoR:any = await guardarPago(pago, token);
-      console.log("Pago guardado");
-      if (!pagoR?.id_pago || !metodoPagoR?.id_metodo_pago) {
-        throw new Error("No se pudo guardar el pago o el método de pago.");
-      }
-
-      if (
-        !factura?.id_empresa ||
-        !factura?.nombre_empresa ||
-        !factura?.ruc_empresa ||
-        !factura?.telefono_empresa ||
-        !factura?.correo_empresa
-      ) {
-        throw new Error('Faltan datos de empresa o usuario en factura');
-      }
-  
-      // 3. Preparar factura
-      const facturaCompleta: Factura = {
-        id_empresa:        factura.id_empresa,
-        nombre_empresa:    factura.nombre_empresa,
-        ruc_empresa:       factura.ruc_empresa,
-        telefono_empresa:  factura.telefono_empresa,
-        correo_empresa:    factura.correo_empresa,
-        id_usuario:        id_usuario,
-        fecha:             fechaHoy,
-       // id_metodo_pago:    metodoPagoR.id_metodo_pago,
-        sri:               "",
-        subtotal:          parseFloat(totalDescuento.toFixed(2)),
-        total:             parseFloat(totalF.toFixed(2)),
-        iva:               iva_valor,
-        iva_0:             iva_valor,
-      };
-      console.log(facturaCompleta)
-  
-      // 4. Guardar factura
-      const facturaR = await guardarFactura(facturaCompleta, token);
-      console.log("Factura guardada");
-  
-      if (!pagoR?.id_pago || !facturaR?.id_factura) {
-        throw new Error("No se pudo guardar la factura.");
-      }
-  
-      // 5. Guardar detalles de factura
-      const detalleFacturaBase: DetFactura = {
-        id_factura: facturaR.id_factura,
-        id_pago: pagoR.id_pago,
-      };
-  
-      for (const producto of items) {
-        const detalle: DetFactura = {
-          ...detalleFacturaBase,
-          id_producto: producto.id,
-          precio: parseFloat(producto.price.toFixed(2)),
-        };
-  
-        try {
-          await guardarDetalleFactura(detalle, token);
-          console.log("Detalle factura guardado");
-        } catch (error) {
-          console.error("Error al guardar detalle de factura:", error);
-          throw new Error("Error guardando detalles de factura. Proceso abortado.");
-        }
-      }
-  
-      // 6. Guardar productos del usuario
-      for (const producto of items) {
-        const prod_user: ProductoUsuario = {
-          id_usuario,
-          activo: 1,
-          id_pago: pagoR.id_pago,
-          periodo,
-          id_producto: producto.id,
-          precio: producto.price,
-        };
-  
-        try {
-          await guardarProductoUsuario(prod_user, token);
-          console.log("Producto-Usuario guardado");
-        } catch (error) {
-          console.error("Error al guardar Producto-Usuario:", error);
-          throw new Error("Error guardando productos del usuario. Proceso abortado.");
-        }
-      }
-  
-      console.log("Todo el proceso se ejecutó correctamente.");
-    } catch (error: any) {
-      console.error("Error general en el proceso de pago:", error);
-      alert("Ocurrió un error durante el proceso. Por favor, intente nuevamente.");
-    }
-  };
-  
-
+  const billingAddress = useAtomValue(billingAddressAtom);
+  const shippingAddress = useAtomValue(shippingAddressAtom);
   return (
     <div className="@container">
       <div className="flex flex-wrap justify-center border-b border-t border-gray-300 py-4 font-medium text-gray-700 @5xl:justify-start">
         <span className="my-2 border-r border-muted px-5 py-0.5 first:ps-0 last:border-r-0">
+          {/* October 22, 2022 at 10:30 pm */}
           {formatDate(new Date(), 'MMMM D, YYYY')} at{' '}
           {formatDate(new Date(), 'h:mm A')}
         </span>
@@ -462,7 +120,7 @@ export default function OrderView() {
         </span>
       </div>
       <div className="items-start pt-10 @5xl:grid @5xl:grid-cols-12 @5xl:gap-7 @6xl:grid-cols-10 @7xl:gap-10">
-        <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7" style={{ justifyItems: 'center' }}>
+        <div className="space-y-7 @5xl:col-span-8 @5xl:space-y-10 @6xl:col-span-7">
           {orderNote && (
             <div className="">
               <span className="mb-1.5 block text-sm font-medium text-gray-700">
@@ -478,92 +136,87 @@ export default function OrderView() {
             <OrderViewProducts />
             <div className="border-t border-muted pt-7 @5xl:mt-3">
               <div className="ms-auto max-w-lg space-y-6">
-                <div className="flex font-medium text-center" style={{ justifyContent: 'end' }}>
-                  <del className='text-red'>{subtotal}</del>
-                </div>
-                {membresia && (
-                  <div className="flex justify-between font-medium">
-                    Descuento (-{membresia.descuento * 100}%): <span>-{toCurrency(descuento)}</span>
-                  </div>
-                )}
                 <div className="flex justify-between font-medium">
-                  Subtotal: <span>{toCurrency(totalDescuento)}</span>
+                  Subtotal <span>{subtotal}</span>
                 </div>
-                {iva && (
-                  <div className="flex justify-between font-medium">
-                    IVA ({iva.iva_valor * 100}%): <span>{toCurrency(totalIva)}</span>
-                  </div>
-                )}
-
+                <div className="flex justify-between font-medium">
+                  Store Credit <span>{toCurrency(0)}</span>
+                </div>
+                <div className="flex justify-between font-medium">
+                  Subtotal <span>{toCurrency(0)}</span>
+                </div>
                 <div className="flex justify-between border-t border-muted pt-5 text-base font-semibold">
-                  Total <span>{toCurrency(totalF)}</span>
+                  Total <span>{totalPrice}</span>
                 </div>
               </div>
             </div>
           </div>
-          <FormProvider {...methods}>
-            <form
-              onSubmit={methods.handleSubmit(onSubmit)}
-              className={cn('isomorphic-form flex flex-col gap-4')}
+
+          <div className="">
+            <Title
+              as="h3"
+              className="mb-3.5  text-base font-semibold @5xl:mb-5 @7xl:text-lg"
             >
-              <Title as="h3" className="font-semibold">Datos de facturación (Obligatorio)</Title>
+              Transactions
+            </Title>
 
-              <Input
-                label="DNI / RUC"
-                placeholder="Ingrese su DNI o RUC"
-                {...methods.register('dniRuc')}
-                error={methods.formState.errors.dniRuc?.message}
-                onBlur={(e) => handleDniBlur(e)}
-              />
+            <div className="space-y-4">
+              {transitions.map((item) => (
+                <div
+                  key={item.paymentMethod.name}
+                  className="flex items-center justify-between rounded-lg border border-gray-100 px-5 py-5 font-medium shadow-sm transition-shadow @5xl:px-7"
+                >
+                  <div className="flex w-1/3 items-center">
+                    <div className="shrink-0">
+                      <Image
+                        src={item.paymentMethod.image}
+                        alt={item.paymentMethod.name}
+                        height={60}
+                        width={60}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col ps-4">
+                      <Text as="span" className="font-lexend text-gray-700">
+                        Payment
+                      </Text>
+                      <span className="pt-1 text-[13px] font-normal text-gray-500">
+                        Via {item.paymentMethod.name}
+                      </span>
+                    </div>
+                  </div>
 
-              <Input
-                label="Nombre"
-                placeholder="Ingrese su nombre completo"
-                {...methods.register('nombre')}
-                error={methods.formState.errors.nombre?.message}
-              />
+                  <div className="w-1/3 text-end">{item.price}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-              <Input
-                label="Correo"
-                type="email"
-                placeholder="Ingrese su correo"
-                {...methods.register('correo')}
-                error={methods.formState.errors.correo?.message}
-              />
-
-              <Input
-                label="Dirección"
-                placeholder="Ingrese su dirección"
-                {...methods.register('direccion')}
-                error={methods.formState.errors.direccion?.message}
-              />
-
-              <Controller
-                name="telefono"
-                control={methods.control}
-                render={({ field }) => (
-                  <PhoneNumber
-                    label="Teléfono"
-                    country="us"
-                    value={field.value}
-                    onChange={field.onChange}
-                    error={methods.formState.errors.telefono?.message}
-                  />
-                )}
-              />
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Button type="submit" size="xl" className="w-40" style={{ margin: "15px" }}>
-                  Guardar
-                </Button>
+          <div className="">
+            <div className="mb-3.5 @5xl:mb-5">
+              <Title as="h3" className="text-base font-semibold @7xl:text-lg">
+                Balance
+              </Title>
+            </div>
+            <div className="space-y-6 rounded-xl border border-muted px-5 py-6 @5xl:space-y-7 @5xl:p-7">
+              <div className="flex justify-between font-medium">
+                Total Order <span>$5275.00</span>
               </div>
-
-            </form>
-          </FormProvider>
-          <div className="" style={{ maxWidth: '400px', justifyContent: 'end' }}>
-            < PayPalButtonComponent iva={iva?.iva_valor} paypalItems={paypalItems} subtotal={totalDescuento} onPaymentApproved={handlePaymentApproved} />
+              <div className="flex justify-between font-medium">
+                Total Return <span>$350.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Paid By Customer <span>$3000.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Refunded <span>$350.00</span>
+              </div>
+              <div className="flex justify-between font-medium">
+                Balance <span>$4975.00</span>
+              </div>
+            </div>
           </div>
         </div>
-
         <div className="space-y-7 pt-8 @container @5xl:col-span-4 @5xl:space-y-10 @5xl:pt-0 @6xl:col-span-3">
           <WidgetCard
             title="Order Status"
@@ -592,9 +245,72 @@ export default function OrderView() {
               ))}
             </div>
           </WidgetCard>
+
+          <WidgetCard
+            title="Customer Details"
+            childrenWrapperClass="py-5 @5xl:py-8 flex"
+          >
+            <div className="relative aspect-square h-16 w-16 shrink-0 @5xl:h-20 @5xl:w-20">
+              <Image
+                fill
+                alt="avatar"
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw"
+                src="https://isomorphic-furyroad.s3.amazonaws.com/public/avatar.png"
+              />
+            </div>
+            <div className="ps-4 @5xl:ps-6">
+              <Title
+                as="h3"
+                className="mb-2.5 text-base font-semibold @7xl:text-lg"
+              >
+                Leslie Alexander
+              </Title>
+              <Text as="p" className="mb-2 break-all last:mb-0">
+                nevaeh.simmons@example.com
+              </Text>
+              <Text as="p" className="mb-2 last:mb-0">
+                (316) 555-0116
+              </Text>
+            </div>
+          </WidgetCard>
+
+          <WidgetCard
+            title="Shipping Address"
+            childrenWrapperClass="@5xl:py-6 py-5"
+          >
+            <Title
+              as="h3"
+              className="mb-2.5 text-base font-semibold @7xl:text-lg"
+            >
+              {billingAddress?.customerName}
+            </Title>
+            <Text as="p" className="mb-2 leading-loose last:mb-0">
+              {billingAddress?.street}, {billingAddress?.city},{' '}
+              {billingAddress?.state}, {billingAddress?.zip},{' '}
+              {billingAddress?.country}
+            </Text>
+          </WidgetCard>
+          {!isEmpty(shippingAddress) && (
+            <WidgetCard
+              title="Billing Address"
+              childrenWrapperClass="@5xl:py-6 py-5"
+            >
+              <Title
+                as="h3"
+                className="mb-2.5 text-base font-semibold @7xl:text-lg"
+              >
+                {shippingAddress?.customerName}
+              </Title>
+              <Text as="p" className="mb-2 leading-loose last:mb-0">
+                {shippingAddress?.street}, {shippingAddress?.city},{' '}
+                {shippingAddress?.state}, {shippingAddress?.zip},{' '}
+                {shippingAddress?.country}
+              </Text>
+            </WidgetCard>
+          )}
         </div>
       </div>
     </div>
-
   );
 }

@@ -3,22 +3,19 @@ import AuthWrapperOne from '@/app/shared/auth-layout/auth-wrapper-one';
 import Image from 'next/image';
 import UnderlineShape from '@components/shape/underline';
 import { metaObject } from '@/config/site.config';
-import IconImage from '@public/icon.png'
-import React, { useEffect, useState } from 'react';
 
 export const metadata = {
   ...metaObject('Sign In'),
 };
 
 export default function SignIn() {
-
   return (
     <AuthWrapperOne
       title={
         <>
           Welcome back! Please Test{' '}
           <span className="relative inline-block">
-            Sign in to..
+            Sign in to....
             <UnderlineShape className="absolute -bottom-2 start-0 h-2.5 w-24 text-blue md:w-28 xl:-bottom-1.5 xl:w-36" />
           </span>{' '}
           continue.
@@ -34,7 +31,7 @@ export default function SignIn() {
         <div className="relative mx-auto aspect-[4/3.37] w-[500px] xl:w-[620px] 2xl:w-[820px]">
           <Image
             src={
-              IconImage
+              'https://isomorphic-furyroad.s3.amazonaws.com/public/auth/sign-up.webp'
             }
             alt="Sign Up Thumbnail"
             fill

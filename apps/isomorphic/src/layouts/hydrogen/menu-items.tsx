@@ -187,7 +187,7 @@ export const menuItems = [
     ],
   },
   {
-    name: 'Support2',
+    name: 'Support',
     href: '#',
     icon: <PiHeadsetDuotone />,
     dropdownItems: [
@@ -206,7 +206,7 @@ export const menuItems = [
     ],
   },
   {
-    name: 'Facturación',
+    name: 'Invoice',
     href: '#',
     icon: <PiCurrencyDollarDuotone />,
     dropdownItems: [

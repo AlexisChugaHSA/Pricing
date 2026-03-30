@@ -9,8 +9,6 @@ import cn from '@utils/class-names';
 import { routes } from '@/config/routes';
 import { CartItem } from '@/types';
 import DrawerHeader from '@/app/shared/drawer-header';
-//import { DUMMY_ID } from '@/config/constants';
-
 
 type CartDrawerViewProps = {
   items: CartItem[];
@@ -64,18 +62,17 @@ export default function CartDrawerView({
             variant="flat"
             onClick={() => setOpenDrawer(false)}
           >
-            Regresar a la tienda
+            Back To Shop
           </Button>
         </div>
       ) : (
         <Link
-          href={routes.eCommerce.createOrder}
-          onClick={() => setOpenDrawer(false)}
+          href={routes.eCommerce.checkout}
           className={cn(
             'mx-4 mb-6 mt-auto flex items-center justify-between rounded-md bg-primary px-5 py-2 font-medium text-primary-foreground md:mx-6'
           )}
         >
-          Ver Orden
+          Checkout
           <span className="-mr-3 inline-flex rounded-md bg-primary-lighter p-2 px-4 text-primary-dark">
             {toCurrency(total)}
           </span>

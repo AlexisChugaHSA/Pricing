@@ -207,7 +207,7 @@ export const menuItems = [
     ],
   },
   {
-    name: 'Facturación',
+    name: 'Invoice',
     href: '#',
     icon: <PiCurrencyDollar />,
     dropdownItems: [

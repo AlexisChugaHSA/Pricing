@@ -23,9 +23,8 @@ const filterState = {
 };
 
 export default function InvoiceTable({ data = [] }: { data: any[] }) {
-  console.log(data)
-  if(data.length > 0){
   const [pageSize, setPageSize] = useState(10);
+
   const onHeaderCellClick = (value: string) => ({
     onClick: () => {
       handleSort(value);
@@ -36,6 +35,7 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
     handleDelete(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   const {
     isLoading,
     isFiltered,
@@ -82,6 +82,7 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
 
   const { visibleColumns, checkedColumns, setCheckedColumns } =
     useColumn(columns);
+
   return (
     <>
       <ControlledTable
@@ -98,7 +99,6 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
           current: currentPage,
           onChange: (page: number) => handlePaginate(page),
         }}
-         /*
         filterOptions={{
           searchTerm,
           onSearchClear: () => {
@@ -112,15 +112,14 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
           checkedColumns,
           setCheckedColumns,
         }}
-     
         filterElement={
           <FilterElement
             isFiltered={isFiltered}
             filters={filters}
             updateFilter={updateFilter}
-            handleReset={handleReset}*/
-          
-        
+            handleReset={handleReset}
+          />
+        }
         tableFooter={
           <TableFooter
             checkedItems={selectedRowKeys}
@@ -138,5 +137,5 @@ export default function InvoiceTable({ data = [] }: { data: any[] }) {
         className="rounded-md border border-muted text-sm shadow-sm [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:h-60 [&_.rc-table-placeholder_.rc-table-expanded-row-fixed>div]:justify-center [&_.rc-table-row:last-child_td.rc-table-cell]:border-b-0 [&_thead.rc-table-thead]:border-t-0"
       />
     </>
-  );}else{console.log("Cargando facturas...")}
+  );
 }

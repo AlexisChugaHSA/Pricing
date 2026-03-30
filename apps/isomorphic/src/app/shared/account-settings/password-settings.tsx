@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, Controller } from 'react-hook-form';
 import { PiDesktop } from 'react-icons/pi';
 import { Form } from '@ui/form';
@@ -12,7 +12,6 @@ import {
   passwordFormSchema,
   PasswordFormTypes,
 } from '@/validators/password-settings.schema';
-import { actualizarUsuario, comprobarPassword, Usuario } from '@/app/services/usuario.service';
 
 export default function PasswordSettingsView({
   settings,
@@ -21,77 +20,25 @@ export default function PasswordSettingsView({
 }) {
   const [isLoading, setLoading] = useState(false);
   const [reset, setReset] = useState({});
-  const [userId, setUserId] = useState<string>('');
-  const [token, setToken] = useState<string | null>(null);
-  const [usuario, setUsuario] = useState<Usuario>();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [alertOpenNOEN, setAlertOpenNOEN] = useState(false);
-  const [alertSuccess, setAlertSuccess] = useState(false);
 
-
-
-
-  useEffect(() => {
-    const usuarioString = localStorage.getItem('usuario');
-    const tokenLS = localStorage.getItem('token');
-    if (usuarioString) {
-      try {
-        const usuario: any = JSON.parse(usuarioString);
-        setUsuario(usuario)
-        setUserId(usuario.id_usuario);
-      } catch (err) {
-        console.error('Error parseando usuario:', err);
-      }
-    }
-    if (tokenLS) {
-      setToken(tokenLS);
-    }
-  }, []);
-
-  const onSubmit: SubmitHandler<PasswordFormTypes> = async (data, e) => {
-    setAlertOpenNOEN(false)
-    if (usuario) {
-      const credenciales = { //cambiar esto cuando este la api
-        id_usuario: Number(usuario.id_usuario),
-        usuario: usuario.usuario,
-        password: data.currentPassword,
-        token: usuario.token
-      };
-      const response = await comprobarPassword(credenciales);
-      if (response.mensaje == "OK") {
-        credenciales.password = data.confirmedPassword
-        const act_user: any = await actualizarUsuario(credenciales)
-        console.log(act_user.mensaje)
-        setAlertSuccess(true);
-        setTimeout(() => setAlertSuccess(false), 3000);
-      }
-      if (response.mensaje == "NO") {
-        setAlertOpenNOEN(true)
-        setIsButtonDisabled(true);
-
-      }
-    }
-
-    setIsButtonDisabled(true);
-
+  const onSubmit: SubmitHandler<PasswordFormTypes> = (data) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       console.log('Password settings data ->', data);
-      e?.target?.reset();
       setReset({
         currentPassword: '',
         newPassword: '',
         confirmedPassword: '',
       });
     }, 600);
-
   };
 
   return (
     <>
       <Form<PasswordFormTypes>
         validationSchema={passwordFormSchema}
+        resetValues={reset}
         onSubmit={onSubmit}
         className="@container"
         useFormProps={{
@@ -101,18 +48,7 @@ export default function PasswordSettingsView({
           },
         }}
       >
-
-        {({ register, control, formState: { errors }, getValues, watch, reset }) => {
-          const newPassword = watch('newPassword');
-          const confirmedPassword = watch('confirmedPassword');
-
-          useEffect(() => {
-            const isValidPassword = newPassword?.length >= 8;
-            const doPasswordsMatch = newPassword === confirmedPassword;
-            setIsButtonDisabled(!(isValidPassword && doPasswordsMatch));
-          }, [newPassword, confirmedPassword]);
-
-
+        {({ register, control, formState: { errors }, getValues }) => {
           return (
             <>
               <ProfileHeader
@@ -122,27 +58,18 @@ export default function PasswordSettingsView({
 
               <div className="mx-auto w-full max-w-screen-2xl">
                 <HorizontalFormBlockWrapper
-                  title="Contraseña actual"
+                  title="Current Password"
                   titleClassName="text-base font-medium"
                 >
                   <Password
                     {...register('currentPassword')}
                     placeholder="Enter your password"
                     error={errors.currentPassword?.message}
-                    onFocus={(e) => {
-                      if (!e.target.value) {
-                        setAlertOpenNOEN(false);
-                      }
-                    }}
                   />
-                  {alertOpenNOEN && (
-                    <div role="alert" className=" col-span-2 text-red text-[13px] mt-0.5 rizzui-password-error-text">La contraseña ingresada es incorrecta</div>
-                  )}
                 </HorizontalFormBlockWrapper>
 
-
                 <HorizontalFormBlockWrapper
-                  title="Nueva contraseña"
+                  title="New Password"
                   titleClassName="text-base font-medium"
                 >
                   <Controller
@@ -163,7 +90,7 @@ export default function PasswordSettingsView({
                 </HorizontalFormBlockWrapper>
 
                 <HorizontalFormBlockWrapper
-                  title="Confirme su nueva contraseña"
+                  title="Confirm New Password"
                   titleClassName="text-base font-medium"
                 >
                   <Controller
@@ -179,39 +106,20 @@ export default function PasswordSettingsView({
                   />
                 </HorizontalFormBlockWrapper>
 
-
                 <div className="mt-6 flex w-auto items-center justify-end gap-3">
-                  {alertSuccess && (
-                    <div
-                      className="flex items-center gap-2 bg-green-100 text-green-700 px-4 py-2 rounded-md border border-green-300"
-                      style={{ width: "max-content" }}
-                    >
-                      <span className="text-sm font-medium">
-                        Contraseña actualizada con éxito
-                      </span>
-                    </div>
-                  )}
                   <Button type="button" variant="outline">
                     Cancel
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="solid"
-                    isLoading={isLoading}
-                    disabled={isButtonDisabled}
-                  >
+                  <Button type="submit" variant="solid" isLoading={isLoading}>
                     Update Password
                   </Button>
-
-
-
                 </div>
               </div>
             </>
           );
         }}
       </Form>
-      {/*<LoggedDevices className="mt-10" />*/}
+      <LoggedDevices className="mt-10" />
     </>
   );
 }
